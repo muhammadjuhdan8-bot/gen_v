@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perpustakaan Aksara | Form Peminjaman Buku</title>
+  <meta name="description" content="Form peminjaman buku perpustakaan yang interaktif dan tenang.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+/* ==========================================================
+   Perpustakaan Aksara — nuansa tenang ala ruang baca
+   ========================================================== */
+ 
+:root {
+  --bg: #f4ecdd;
+  --bg-soft: #efe4d0;
+  --paper: #fbf7ef;
+  --card: #fffaf1;
+  --ink: #3a2c22;
+  --ink-soft: #6f5d4e;
+  --line: #e2d5bd;
+  --wood: #6b4a32;
+  --wood-dark: #4a3122;
+  --green: #355845;
+  --green-dark: #264136;
+  --gold: #b98b3e;
+  --danger: #a8402f;
+  --shadow: 0 10px 30px rgba(74, 49, 34, .12);
+  --shadow-sm: 0 3px 10px rgba(74, 49, 34, .10);
+  --radius: 16px;
+  --serif: "Playfair Display", Georgia, serif;
+  --body: "Lora", Georgia, serif;
+  --ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+ 
+[data-theme="dark"] {
+  --bg: #1a1612;
+  --bg-soft: #211c17;
+  --paper: #251f19;
+  --card: #2b241d;
+  --ink: #efe3d0;
+  --ink-soft: #b9a791;
+  --line: #3d332a;
+  --wood: #c19a6b;
+  --wood-dark: #e0c49b;
+  --green: #6fa384;
+  --green-dark: #8dbb9f;
+  --gold: #d4a959;
+  --danger: #e07a67;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .45);
+  --shadow-sm: 0 3px 10px rgba(0, 0, 0, .35);
+}
+ 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+ 
+body {
+  font-family: var(--body);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(185, 139, 62, .08), transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(53, 88, 69, .08), transparent 45%),
+    var(--bg);
+  line-height: 1.65;
+  transition: background .4s, color .4s;
+  -webkit-font-smoothing: antialiased;
+}
+ 
+.wrap { width: min(1180px, 92%); margin-inline: auto; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.2; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+.muted { color: var(--ink-soft); font-size: .92rem; }
+.req { color: var(--danger); }
+ 
+.eyebrow {
+  font-family: var(--ui);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: .75rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+.eyebrow--small { font-size: .68rem; }
+ 
+/* ---------- Topbar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow .3s;
+}
+.topbar.scrolled { box-shadow: var(--shadow-sm); }
+.topbar__inner { display: flex; align-items: center; justify-content: space-between; height: 66px; gap: 1rem; }
+ 
+.brand { display: flex; align-items: center; gap: .7rem; font-family: var(--serif); font-size: 1.15rem; }
+.brand__icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #f6ead2; box-shadow: var(--shadow-sm);
+}
+.brand strong { color: var(--gold); }
+ 
+.nav { display: flex; gap: 1.8rem; font-family: var(--ui); font-size: .9rem; font-weight: 500; }
+.nav a { position: relative; color: var(--ink-soft); padding: .3rem 0; transition: color .2s; }
+.nav a::after {
+  content: ""; position: absolute; left: 0; bottom: -2px; height: 2px; width: 0;
+  background: var(--gold); transition: width .3s;
+}
+.nav a:hover { color: var(--ink); }
+.nav a:hover::after { width: 100%; }
+ 
+.topbar__actions { display: flex; gap: .5rem; }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  display: grid; place-items: center; font-size: 1.05rem;
+  transition: transform .25s, background .25s;
+}
+.icon-btn:hover { transform: rotate(-12deg) scale(1.06); background: var(--bg-soft); }
+.nav-toggle { display: none; }
+ 
+/* ---------- Hero ---------- */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 4.5rem 0 3rem;
+  text-align: center;
+  background:
+    linear-gradient(180deg, var(--bg-soft), var(--bg));
+  border-bottom: 1px solid var(--line);
+}
+.hero__glow {
+  position: absolute; top: -140px; left: 50%; transform: translateX(-50%);
+  width: 620px; height: 620px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 190, 110, .35), transparent 65%);
+  filter: blur(10px); pointer-events: none;
+  animation: lamp 7s ease-in-out infinite;
+}
+@keyframes lamp { 0%,100% { opacity: .75; } 50% { opacity: 1; } }
+ 
+.hero__inner { position: relative; }
+.hero__title { font-size: clamp(2rem, 5vw, 3.6rem); margin: .6rem 0 1rem; color: var(--wood-dark); }
+.hero__title span { color: var(--green); font-style: italic; }
+.hero__lead { max-width: 640px; margin: 0 auto 1.4rem; color: var(--ink-soft); font-size: 1.05rem; }
+ 
+.quote {
+  display: inline-block; max-width: 620px; margin: 0 auto 2.4rem;
+  padding: .7rem 1.4rem; border-left: 3px solid var(--gold);
+  font-style: italic; color: var(--ink-soft); background: color-mix(in srgb, var(--card) 70%, transparent);
+  border-radius: 0 10px 10px 0; min-height: 3.2rem;
+  transition: opacity .5s;
+}
+.quote.fade { opacity: 0; }
+ 
+/* Rak buku */
+.shelf-wrap { max-width: 860px; margin: 0 auto; }
+.shelf-hint { font-family: var(--ui); font-size: .78rem; color: var(--ink-soft); margin-bottom: .8rem; }
+.shelf {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 6px; padding: 0 1.2rem; min-height: 200px;
+}
+.spine {
+  position: relative; width: 46px;
+  border: 0; border-radius: 4px 4px 2px 2px;
+  color: rgba(255, 255, 255, .92);
+  box-shadow: inset -4px 0 0 rgba(0,0,0,.18), inset 3px 0 0 rgba(255,255,255,.12), 2px 2px 6px rgba(0,0,0,.25);
+  transform-origin: bottom center;
+  transition: transform .3s cubic-bezier(.2,.8,.3,1.3), filter .25s;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.spine::before, .spine::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.35);
+}
+.spine::before { top: 14px; }
+.spine::after { bottom: 14px; }
+.spine span {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--serif); font-size: .82rem; letter-spacing: .04em;
+  padding: 26px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 100%;
+}
+.spine:hover { transform: translateY(-14px) rotate(-3deg); filter: brightness(1.12); }
+.spine.active { transform: translateY(-22px); box-shadow: 0 0 0 2px var(--gold), 2px 8px 14px rgba(0,0,0,.35); }
+.spine.empty-stock { filter: grayscale(.8) brightness(.8); }
+.shelf__board {
+  height: 18px; margin: 0 auto; width: min(100%, 860px);
+  background: linear-gradient(180deg, #8a6444, #5e3f29);
+  border-radius: 4px; box-shadow: 0 10px 18px rgba(74, 49, 34, .35);
+}
+ 
+/* ---------- Layout ---------- */
+.layout {
+  display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr);
+  gap: 2rem; padding: 3.5rem 0 2.5rem; align-items: start;
+}
+.side { display: grid; gap: 1.4rem; position: sticky; top: 90px; }
+ 
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 1.8rem;
+}
+.card__head { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.6rem; padding-bottom: 1.2rem; border-bottom: 1px dashed var(--line); }
+.card__head h2 { font-size: 1.5rem; }
+.card__head p { color: var(--ink-soft); font-size: .9rem; font-family: var(--ui); }
+.card__badge {
+  width: 46px; height: 46px; border-radius: 12px; flex: none;
+  display: grid; place-items: center; font-size: 1.2rem;
+  background: color-mix(in srgb, var(--gold) 20%, transparent); color: var(--gold);
+}
+ 
+/* ---------- Form ---------- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.field { margin-bottom: 1.3rem; border: 0; min-width: 0; }
+label, legend {
+  display: block; font-family: var(--ui); font-weight: 600; font-size: .85rem;
+  margin-bottom: .45rem; color: var(--ink); padding: 0;
+}
+ 
+.input { position: relative; }
+.input > i:first-child {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--gold); pointer-events: none; font-size: 1rem; width: 18px; text-align: center;
+}
+.input .caret { position: absolute; right: 14px; left: auto; top: 50%; transform: translateY(-50%); color: var(--ink-soft); pointer-events: none; }
+ 
+input[type="text"], input[type="date"], select, textarea {
+  width: 100%; font-family: var(--ui); font-size: .95rem; color: var(--ink);
+  background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px;
+  padding: .8rem 1rem .8rem 2.7rem; outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+textarea { padding: .9rem 1rem; resize: vertical; min-height: 120px; font-family: var(--body); line-height: 1.6; }
+select { appearance: none; -webkit-appearance: none; padding-right: 2.4rem; cursor: pointer; }
+input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--ink-soft) 65%, transparent); }
+input:focus, select:focus, textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 18%, transparent);
+  background: var(--card);
+}
+.input--readonly input { background: var(--bg-soft); color: var(--wood); font-weight: 600; letter-spacing: .08em; cursor: default; }
+[data-theme="dark"] input[type="date"] { color-scheme: dark; }
+ 
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--danger); }
+.error { display: block; min-height: 1.1rem; margin-top: .3rem; font-family: var(--ui); font-size: .78rem; color: var(--danger); }
+.hint { display: block; margin-top: .3rem; font-family: var(--ui); font-size: .78rem; color: var(--ink-soft); }
+.counter { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--ui); font-size: .78rem; color: var(--ink-soft); }
+.counter .error { flex: 1; }
+ 
+/* chips */
+.chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip span {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--ui); font-size: .88rem; font-weight: 500;
+  padding: .55rem 1rem; border-radius: 999px;
+  border: 1.5px solid var(--line); background: var(--paper); color: var(--ink-soft);
+  cursor: pointer; transition: all .2s;
+}
+.chip span:hover { border-color: var(--gold); color: var(--ink); transform: translateY(-1px); }
+.chip input:checked + span { background: var(--green); border-color: var(--green); color: #fff; box-shadow: var(--shadow-sm); }
+.chip input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--gold) 55%, transparent); outline-offset: 2px; }
+ 
+/* qty */
+.qty { display: flex; flex-wrap: wrap; gap: .5rem; }
+.qty label { margin: 0; position: relative; }
+.qty input { position: absolute; opacity: 0; pointer-events: none; }
+.qty span {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
+  font-family: var(--ui); font-weight: 600; background: var(--paper); border: 1.5px solid var(--line);
+  color: var(--ink-soft); cursor: pointer; transition: all .2s;
+}
+.qty span:hover { border-color: var(--gold); transform: translateY(-2px); }
+.qty input:checked + span { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: var(--shadow-sm); }
+.qty input:disabled + span { opacity: .35; cursor: not-allowed; transform: none; border-style: dashed; }
+.qty input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--green) 50%, transparent); outline-offset: 2px; }
+ 
+/* buttons */
+.actions { display: flex; justify-content: flex-end; gap: .8rem; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px dashed var(--line); }
+.actions--center { justify-content: center; border-top: 0; margin-top: 1.4rem; padding-top: 0; }
+.btn {
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-family: var(--ui); font-weight: 600; font-size: .92rem;
+  padding: .85rem 1.6rem; border-radius: 12px; border: 1.5px solid transparent;
+  transition: transform .2s, box-shadow .2s, background .2s;
+}
+.btn--sm { padding: .5rem 1rem; font-size: .8rem; }
+.btn--primary { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: #fff; box-shadow: 0 6px 16px color-mix(in srgb, var(--green) 40%, transparent); }
+.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px color-mix(in srgb, var(--green) 45%, transparent); }
+.btn--primary:active { transform: translateY(0); }
+.btn--ghost { background: transparent; border-color: var(--line); color: var(--ink-soft); }
+.btn--ghost:hover { border-color: var(--wood); color: var(--ink); background: var(--bg-soft); }
+.btn.loading { pointer-events: none; opacity: .8; }
+ 
+/* ---------- Sidebar ---------- */
+.preview { display: flex; gap: 1.1rem; padding: 1.3rem; align-items: center; }
+.preview__cover {
+  flex: none; width: 90px; height: 128px; border-radius: 4px 8px 8px 4px;
+  display: grid; place-items: center; color: rgba(255,255,255,.85); font-size: 1.8rem;
+  background: linear-gradient(135deg, #8d7a68, #6f5d4e);
+  box-shadow: inset 5px 0 0 rgba(0,0,0,.2), 4px 6px 14px rgba(0,0,0,.28);
+  transition: background .4s, transform .4s; text-align: center; padding: .4rem;
+}
+.preview__cover.has-book { font-family: var(--serif); font-size: .82rem; line-height: 1.25; transform: rotate(-3deg); }
+.preview__body h3 { font-size: 1.15rem; margin: .2rem 0; }
+.meta { list-style: none; margin-top: .7rem; display: grid; gap: .25rem; font-family: var(--ui); font-size: .8rem; color: var(--ink-soft); }
+.meta i { color: var(--gold); width: 16px; }
+ 
+.progress-card h3, .rules h3 { font-size: 1.1rem; }
+.progress-card__top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .8rem; }
+.progress-card__top strong { font-family: var(--ui); color: var(--green); }
+.progress { height: 10px; border-radius: 999px; background: var(--bg-soft); overflow: hidden; margin-bottom: .9rem; border: 1px solid var(--line); }
+.progress span { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--green)); transition: width .5s cubic-bezier(.2,.8,.2,1); }
+ 
+.rules h3 { margin-bottom: .8rem; }
+.rules h3 i { color: var(--gold); margin-right: .3rem; }
+.rules ol { padding-left: 1.2rem; display: grid; gap: .4rem; font-size: .92rem; color: var(--ink-soft); }
+.rules li::marker { color: var(--gold); font-weight: 700; }
+ 
+/* ---------- History ---------- */
+.history { padding: 1rem 0 4rem; }
+.history__head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 1.4rem; }
+.history__head h2 { font-size: 1.9rem; margin-top: .3rem; }
+.history__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.2rem; }
+ 
+.loan {
+  position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 1.2rem 1.2rem 1.2rem 1.5rem; box-shadow: var(--shadow-sm);
+  animation: pop .45s cubic-bezier(.2,.8,.3,1.2) both; overflow: hidden;
+}
+.loan::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--book-color, var(--gold)); }
+.loan h3 { font-size: 1.05rem; margin-bottom: .2rem; }
+.loan__who { font-family: var(--ui); font-size: .82rem; color: var(--ink-soft); margin-bottom: .7rem; }
+.loan__rows { display: grid; gap: .25rem; font-family: var(--ui); font-size: .8rem; color: var(--ink-soft); }
+.loan__rows i { color: var(--gold); width: 16px; }
+.loan__foot { display: flex; justify-content: space-between; align-items: center; margin-top: .9rem; }
+.tag { font-family: var(--ui); font-size: .72rem; font-weight: 600; padding: .25rem .65rem; border-radius: 999px; background: color-mix(in srgb, var(--green) 18%, transparent); color: var(--green); }
+.tag--late { background: color-mix(in srgb, var(--danger) 18%, transparent); color: var(--danger); }
+.link-btn { background: none; border: 0; color: var(--danger); font-family: var(--ui); font-size: .78rem; font-weight: 600; padding: .3rem .4rem; border-radius: 6px; }
+.link-btn:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
+.loan.removing { animation: out .3s ease forwards; }
+@keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes out { to { opacity: 0; transform: translateX(30px) scale(.95); } }
+ 
+.empty { text-align: center; padding: 2.6rem 1rem; border: 2px dashed var(--line); border-radius: var(--radius); color: var(--ink-soft); }
+.empty i { font-size: 2rem; color: var(--gold); margin-bottom: .6rem; display: block; }
+.empty[hidden] { display: none; }
+ 
+.footer { text-align: center; padding: 2rem 0; background: var(--wood-dark); color: #e9dcc4; font-family: var(--ui); font-size: .85rem; }
+[data-theme="dark"] .footer { background: #120f0c; color: var(--ink-soft); }
+ 
+/* ---------- Modal ---------- */
+.modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 1rem; visibility: hidden; opacity: 0; transition: opacity .3s, visibility .3s; }
+.modal.open { visibility: visible; opacity: 1; }
+.modal__backdrop { position: absolute; inset: 0; background: rgba(30, 20, 12, .6); backdrop-filter: blur(4px); }
+.modal__dialog {
+  position: relative; width: min(480px, 100%); max-height: 92vh; overflow: auto;
+  background: var(--card); border-radius: 20px; padding: 2rem 1.8rem; text-align: center;
+  box-shadow: 0 25px 60px rgba(0,0,0,.4); transform: translateY(20px) scale(.96); transition: transform .35s cubic-bezier(.2,.8,.3,1.2);
+}
+.modal.open .modal__dialog { transform: none; }
+.modal__check {
+  width: 64px; height: 64px; margin: 0 auto 1rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--green); color: #fff; font-size: 1.7rem; box-shadow: 0 0 0 8px color-mix(in srgb, var(--green) 20%, transparent);
+  animation: beat 1.6s ease-in-out infinite;
+}
+@keyframes beat { 50% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--green) 8%, transparent); } }
+.modal h2 { font-size: 1.6rem; margin-bottom: .3rem; }
+.receipt {
+  margin-top: 1.2rem; text-align: left; font-family: var(--ui); font-size: .88rem;
+  background: var(--paper); border: 1.5px dashed var(--line); border-radius: 12px; padding: 1rem 1.2rem;
+}
+.receipt div { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; border-bottom: 1px dotted var(--line); }
+.receipt div:last-child { border-bottom: 0; }
+.receipt dt { color: var(--ink-soft); }
+.receipt dd { font-weight: 600; text-align: right; word-break: break-word; }
+ 
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 30px); z-index: 120;
+  background: var(--wood-dark); color: #fff7e6; padding: .8rem 1.4rem; border-radius: 12px;
+  font-family: var(--ui); font-size: .88rem; box-shadow: var(--shadow); opacity: 0; pointer-events: none;
+  transition: all .35s cubic-bezier(.2,.8,.3,1.2); max-width: 90vw;
+}
+[data-theme="dark"] .toast { background: var(--gold); color: #1a1612; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.error { background: var(--danger); color: #fff; }
+ 
+/* ---------- Reveal ---------- */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+ 
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; }
+  .side { position: static; }
+}
+@media (max-width: 720px) {
+  .nav-toggle { display: grid; }
+  .nav {
+    position: absolute; top: 66px; left: 0; right: 0; flex-direction: column; gap: 0;
+    background: var(--paper); border-bottom: 1px solid var(--line);
+    max-height: 0; overflow: hidden; transition: max-height .35s ease;
+  }
+  .nav.open { max-height: 220px; }
+  .nav a { padding: .9rem 4%; border-top: 1px solid var(--line); }
+  .grid-2 { grid-template-columns: 1fr; gap: 0; }
+  .card { padding: 1.3rem; }
+  .spine { width: 36px; }
+  .spine span { font-size: .7rem; }
+  .shelf { gap: 4px; padding: 0 .4rem; }
+  .preview { flex-direction: column; text-align: center; }
+  .actions { flex-direction: column-reverse; }
+  .btn { justify-content: center; }
+  .history__head { flex-direction: column; align-items: flex-start; }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+ 
+/* ---------- Print: hanya struk ---------- */
+@media print {
+  body * { visibility: hidden; }
+  .modal, .modal * { visibility: visible; }
+  .modal { position: absolute; inset: 0; opacity: 1; }
+  .modal__backdrop, .actions--center { display: none; }
+  .modal__dialog { box-shadow: none; transform: none; }
+}
+ 
+  </style>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <header class="topbar" id="topbar">
+    <div class="wrap topbar__inner">
+      <a href="#top" class="brand">
+        <span class="brand__icon"><i class="fa fa-book"></i></span>
+        <span class="brand__text">Perpustakaan <strong>Aksara</strong></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#pinjam">Pinjam Buku</a>
+        <a href="#riwayat">Riwayat</a>
+        <a href="#aturan">Aturan</a>
+      </nav>
+      <div class="topbar__actions">
+        <button type="button" class="icon-btn" id="themeToggle" aria-label="Ganti tema siang / malam" title="Ganti tema">
+          <i class="fa fa-moon-o"></i>
+        </button>
+        <button type="button" class="icon-btn nav-toggle" id="navToggle" aria-label="Buka menu">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+ 
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="wrap hero__inner">
+      <p class="eyebrow reveal">Selamat datang di ruang baca</p>
+      <h1 class="hero__title reveal">Form Peminjaman Buku<br><span>Perpustakaan</span></h1>
+      <p class="hero__lead reveal">Temukan buku yang menemanimu hari ini. Pilih dari rak di bawah, isi data dengan tenang, dan bawa pulang pengetahuan baru.</p>
+      <blockquote class="quote reveal" id="quote">
+        <span id="quoteText"></span>
+      </blockquote>
+ 
+      <div class="shelf-wrap reveal">
+        <p class="shelf-hint"><i class="fa fa-hand-pointer-o"></i> Klik punggung buku untuk memilihnya</p>
+        <div class="shelf" id="shelf" role="list" aria-label="Rak buku"></div>
+        <div class="shelf__board"></div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- MAIN -->
+  <main class="wrap layout" id="pinjam">
+ 
+    <!-- FORM -->
+    <section class="card form-card reveal">
+      <div class="card__head">
+        <span class="card__badge"><i class="fa fa-pencil"></i></span>
+        <div>
+          <h2>Data Peminjaman</h2>
+          <p>Lengkapi semua kolom bertanda <span class="req">*</span></p>
+        </div>
+      </div>
+ 
+      <form id="loanForm" novalidate autocomplete="off">
+ 
+        <div class="grid-2">
+          <div class="field">
+            <label for="nama">Nama Peminjam <span class="req">*</span></label>
+            <div class="input">
+              <i class="fa fa-user-o"></i>
+              <input id="nama" name="nama" type="text" placeholder="Nama lengkap" maxlength="60">
+            </div>
+            <small class="error" data-error-for="nama"></small>
+          </div>
+ 
+          <div class="field">
+            <label for="nim">NIM <span class="req">*</span></label>
+            <div class="input">
+              <i class="fa fa-id-card-o"></i>
+              <input id="nim" name="nim" type="text" inputmode="numeric" placeholder="Contoh: 2410101001" maxlength="14">
+            </div>
+            <small class="error" data-error-for="nim"></small>
+          </div>
+        </div>
+ 
+        <div class="grid-2">
+          <div class="field">
+            <label for="kelas">Kelas <span class="req">*</span></label>
+            <div class="input">
+              <i class="fa fa-graduation-cap"></i>
+              <input id="kelas" name="kelas" type="text" placeholder="Contoh: TI-2A" maxlength="20">
+            </div>
+            <small class="error" data-error-for="kelas"></small>
+          </div>
+ 
+          <div class="field">
+            <label for="tanggal">Tanggal Peminjaman <span class="req">*</span></label>
+            <div class="input">
+              <i class="fa fa-calendar-o"></i>
+              <input id="tanggal" name="tanggal" type="date">
+            </div>
+            <small class="error" data-error-for="tanggal"></small>
+          </div>
+        </div>
+ 
+        <div class="grid-2">
+          <div class="field">
+            <label for="buku">Judul Buku <span class="req">*</span></label>
+            <div class="input input--select">
+              <i class="fa fa-book"></i>
+              <select id="buku" name="buku">
+                <option value="">— Pilih judul buku —</option>
+              </select>
+              <i class="fa fa-angle-down caret"></i>
+            </div>
+            <small class="error" data-error-for="buku"></small>
+          </div>
+ 
+          <div class="field">
+            <label for="kode">Kode Buku</label>
+            <div class="input input--readonly">
+              <i class="fa fa-barcode"></i>
+              <input id="kode" name="kode" type="text" placeholder="Terisi otomatis" readonly>
+            </div>
+            <small class="hint">Kode muncul otomatis setelah memilih buku.</small>
+          </div>
+        </div>
+ 
+        <fieldset class="field">
+          <legend>Jenis Buku yang Diminati</legend>
+          <div class="chips" id="genreChips">
+            <label class="chip"><input type="checkbox" name="genre" value="Reinkarnasi"><span><i class="fa fa-refresh"></i> Reinkarnasi</span></label>
+            <label class="chip"><input type="checkbox" name="genre" value="Time Travel"><span><i class="fa fa-hourglass-half"></i> Time Travel</span></label>
+            <label class="chip"><input type="checkbox" name="genre" value="Fantasy"><span><i class="fa fa-magic"></i> Fantasy</span></label>
+          </div>
+        </fieldset>
+ 
+        <fieldset class="field">
+          <legend>Jumlah Buku yang Dipinjam <span class="req">*</span></legend>
+          <div class="qty" id="qtyGroup"></div>
+          <small class="hint" id="qtyHint">Pilih buku terlebih dahulu untuk melihat stok.</small>
+          <small class="error" data-error-for="jumlah"></small>
+        </fieldset>
+ 
+        <div class="field">
+          <label for="alasan">Tuliskan alasan kamu meminjam buku <span class="req">*</span></label>
+          <textarea id="alasan" name="alasan" rows="5" maxlength="300" placeholder="Ceritakan singkat kenapa buku ini menarik bagimu…"></textarea>
+          <div class="counter"><small class="error" data-error-for="alasan"></small><span id="counter">0 / 300</span></div>
+        </div>
+ 
+        <div class="actions">
+          <button type="button" class="btn btn--ghost" id="resetBtn"><i class="fa fa-undo"></i> Atur Ulang</button>
+          <button type="submit" class="btn btn--primary" id="submitBtn"><i class="fa fa-bookmark-o"></i> Pinjam Buku</button>
+        </div>
+      </form>
+    </section>
+ 
+    <!-- SIDEBAR -->
+    <aside class="side">
+ 
+      <div class="card preview reveal" id="preview">
+        <div class="preview__cover" id="previewCover">
+          <i class="fa fa-book"></i>
+        </div>
+        <div class="preview__body">
+          <p class="eyebrow eyebrow--small">Pratinjau Buku</p>
+          <h3 id="pvTitle">Belum ada buku dipilih</h3>
+          <p class="muted" id="pvAuthor">Pilih dari rak atau daftar judul.</p>
+          <ul class="meta" id="pvMeta" hidden>
+            <li><i class="fa fa-tag"></i> <span id="pvCat"></span></li>
+            <li><i class="fa fa-barcode"></i> <span id="pvCode"></span></li>
+            <li><i class="fa fa-cubes"></i> Tersedia <strong id="pvStock"></strong> eksemplar</li>
+          </ul>
+        </div>
+      </div>
+ 
+      <div class="card progress-card reveal">
+        <div class="progress-card__top">
+          <h3>Kelengkapan Form</h3>
+          <strong id="progressText">0%</strong>
+        </div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+          <span id="progressFill"></span>
+        </div>
+        <p class="muted" id="dueInfo"><i class="fa fa-clock-o"></i> Batas pengembalian akan dihitung otomatis (7 hari).</p>
+      </div>
+ 
+      <div class="card rules reveal" id="aturan">
+        <h3><i class="fa fa-info-circle"></i> Aturan Singkat</h3>
+        <ol>
+          <li>Masa pinjam maksimal <strong>7 hari</strong>.</li>
+          <li>Maksimal <strong>9 buku</strong> per peminjaman.</li>
+          <li>Jaga ketenangan dan kebersihan buku.</li>
+          <li>Buku hilang atau rusak wajib diganti.</li>
+        </ol>
+      </div>
+    </aside>
+  </main>
+ 
+  <!-- HISTORY -->
+  <section class="wrap history reveal" id="riwayat">
+    <div class="history__head">
+      <div>
+        <p class="eyebrow">Catatan Sirkulasi</p>
+        <h2>Riwayat Peminjaman</h2>
+      </div>
+      <button type="button" class="btn btn--ghost btn--sm" id="clearAll"><i class="fa fa-trash-o"></i> Hapus Semua</button>
+    </div>
+    <div class="history__list" id="historyList"></div>
+    <div class="empty" id="emptyState">
+      <i class="fa fa-book"></i>
+      <p>Belum ada peminjaman. Buku pertamamu menunggu di rak.</p>
+    </div>
+  </section>
+ 
+  <footer class="footer">
+    <div class="wrap">
+      <p>&copy; <span id="year"></span> Perpustakaan Aksara &middot; Ruang tenang untuk pikiran yang haus cerita.</p>
+    </div>
+  </footer>
+ 
+  <!-- MODAL STRUK -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__check"><i class="fa fa-check"></i></div>
+      <h2 id="modalTitle">Peminjaman Berhasil</h2>
+      <p class="muted">Simpan bukti ini dan tunjukkan kepada petugas perpustakaan.</p>
+      <div class="receipt" id="receipt"></div>
+      <div class="actions actions--center">
+        <button type="button" class="btn btn--ghost" id="printBtn"><i class="fa fa-print"></i> Cetak</button>
+        <button type="button" class="btn btn--primary" data-close><i class="fa fa-check"></i> Selesai</button>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+ 
+  <script>
+/* ==========================================================
+   Perpustakaan Aksara — logika form interaktif
+   ========================================================== */
+(function () {
+  "use strict";
+ 
+  /* ---------- Data buku ---------- */
+  const BOOKS = [
+    { key: "gw",   title: "Garis Waktu",                 author: "Fiersa Besari",     code: "GW-001",   cat: "Refleksi & Puisi",      color: "#8a5a44", height: 170, stock: 4 },
+    { key: "p",    title: "Pulang",                      author: "Tere Liye",         code: "PL-002",   cat: "Fiksi",                 color: "#355845", height: 150, stock: 5 },
+    { key: "ta",   title: "The Alchemist",               author: "Paulo Coelho",      code: "TA-003",   cat: "Fiksi Filosofis",       color: "#b98b3e", height: 180, stock: 3 },
+    { key: "ah",   title: "Atomic Habits",               author: "James Clear",       code: "AH-004",   cat: "Pengembangan Diri",     color: "#2f5d7a", height: 160, stock: 6 },
+    { key: "ft",   title: "Filosofi Teras",              author: "Henry Manampiring", code: "FT-005",   cat: "Filsafat Praktis",      color: "#6b3f5a", height: 175, stock: 4 },
+    { key: "tpom", title: "The Psychology of Money",     author: "Morgan Housel",     code: "PM-006",   cat: "Keuangan & Psikologi",  color: "#3d6b5c", height: 155, stock: 5 },
+    { key: "slaa", title: "Steal Like an Artist",        author: "Austin Kleon",      code: "SA-007",   cat: "Kreativitas",           color: "#a8402f", height: 140, stock: 3 },
+    { key: "doet", title: "The Design of Everyday Things", author: "Don Norman",      code: "DE-008",   cat: "Desain",                color: "#4a3122", height: 185, stock: 2 },
+    { key: "rsum", title: "Riwayat Singkat Umat Manusia", author: "Yuval Noah Harari", code: "RU-009",  cat: "Sejarah",               color: "#5a4a8a", height: 165, stock: 4 }
+  ];
+ 
+  const QUOTES = [
+    "“Sebuah buku adalah taman yang bisa kamu bawa di dalam saku.”",
+    "“Membaca adalah cara paling sunyi untuk bepergian jauh.”",
+    "“Satu halaman setiap hari, dan dunia perlahan berubah.”",
+    "“Di rak-rak yang diam, ribuan suara menunggu didengar.”"
+  ];
+ 
+  const LOAN_DAYS = 7;
+  const MAX_QTY = 9;
+  const LS_LOANS = "aksara_loans_v1";
+  const LS_STOCK = "aksara_stock_v1";
+  const LS_THEME = "aksara_theme";
+ 
+  /* ---------- Helpers ---------- */
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+ 
+  const form = $("#loanForm");
+  const el = {
+    nama: $("#nama"), nim: $("#nim"), kelas: $("#kelas"), tanggal: $("#tanggal"),
+    buku: $("#buku"), kode: $("#kode"), alasan: $("#alasan"), counter: $("#counter"),
+    qtyGroup: $("#qtyGroup"), qtyHint: $("#qtyHint"),
+    shelf: $("#shelf"),
+    pvTitle: $("#pvTitle"), pvAuthor: $("#pvAuthor"), pvMeta: $("#pvMeta"),
+    pvCat: $("#pvCat"), pvCode: $("#pvCode"), pvStock: $("#pvStock"), pvCover: $("#previewCover"),
+    progressFill: $("#progressFill"), progressText: $("#progressText"), progressBar: $("#progressBar"),
+    dueInfo: $("#dueInfo"),
+    historyList: $("#historyList"), emptyState: $("#emptyState"),
+    modal: $("#modal"), receipt: $("#receipt"), toast: $("#toast")
+  };
+ 
+  const fmtDate = (d) => new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(d);
+  const fmtShort = (d) => new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(d);
+  const toISO = (d) => {
+    const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return z.toISOString().slice(0, 10);
+  };
+  const parseISO = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d, n) => { const c = new Date(d); c.setDate(c.getDate() + n); return c; };
+  const bookByKey = (k) => BOOKS.find((b) => b.key === k);
+ 
+  function load(key, fallback) {
+    try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; } catch (e) { return fallback; }
+  }
+  function save(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* abaikan */ }
+  }
+ 
+  /* ---------- State ---------- */
+  let loans = load(LS_LOANS, []);
+  let stock = load(LS_STOCK, null);
+  if (!stock) { stock = {}; BOOKS.forEach((b) => (stock[b.key] = b.stock)); save(LS_STOCK, stock); }
+  const available = (key) => (stock[key] ?? 0);
+ 
+  /* ---------- Tema siang / malam ---------- */
+  const themeBtn = $("#themeToggle");
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    themeBtn.innerHTML = t === "dark" ? '<i class="fa fa-sun-o"></i>' : '<i class="fa fa-moon-o"></i>';
+  }
+  applyTheme(load(LS_THEME, window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  themeBtn.addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next); save(LS_THEME, next);
+    toast(next === "dark" ? "Mode malam: lampu baca dinyalakan" : "Mode siang: cahaya jendela masuk");
+  });
+ 
+  /* ---------- Navbar mobile + scroll ---------- */
+  $("#navToggle").addEventListener("click", () => $("#nav").classList.toggle("open"));
+  $$("#nav a").forEach((a) => a.addEventListener("click", () => $("#nav").classList.remove("open")));
+  window.addEventListener("scroll", () => $("#topbar").classList.toggle("scrolled", window.scrollY > 8), { passive: true });
+ 
+  /* ---------- Kutipan berganti ---------- */
+  const quoteBox = $("#quote");
+  const quoteText = $("#quoteText");
+  let qi = 0;
+  quoteText.textContent = QUOTES[0];
+  setInterval(() => {
+    quoteBox.classList.add("fade");
+    setTimeout(() => {
+      qi = (qi + 1) % QUOTES.length;
+      quoteText.textContent = QUOTES[qi];
+      quoteBox.classList.remove("fade");
+    }, 500);
+  }, 6000);
+ 
+  /* ---------- Render pilihan buku + rak ---------- */
+  BOOKS.forEach((b) => {
+    const o = document.createElement("option");
+    o.value = b.key; o.textContent = b.title;
+    el.buku.appendChild(o);
+  });
+ 
+  function renderShelf() {
+    el.shelf.innerHTML = "";
+    BOOKS.forEach((b) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "spine" + (available(b.key) === 0 ? " empty-stock" : "") + (el.buku.value === b.key ? " active" : "");
+      btn.style.height = b.height + "px";
+      btn.style.background = `linear-gradient(90deg, ${b.color}, ${shade(b.color, -18)})`;
+      btn.setAttribute("role", "listitem");
+      btn.setAttribute("aria-label", `${b.title} oleh ${b.author}`);
+      btn.title = `${b.title} — ${b.author}`;
+      const s = document.createElement("span");
+      s.textContent = b.title;
+      btn.appendChild(s);
+      btn.addEventListener("click", () => {
+        el.buku.value = b.key;
+        onBookChange();
+        document.getElementById("pinjam").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      el.shelf.appendChild(btn);
+    });
+  }
+ 
+  function shade(hex, pct) {
+    const n = parseInt(hex.slice(1), 16);
+    const f = (c) => Math.max(0, Math.min(255, Math.round(c + (255 * pct) / 100)));
+    const r = f(n >> 16), g = f((n >> 8) & 255), b = f(n & 255);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+ 
+  /* ---------- Pratinjau & kode buku ---------- */
+  function onBookChange() {
+    const b = bookByKey(el.buku.value);
+    if (b) {
+      el.kode.value = b.code;
+      el.pvTitle.textContent = b.title;
+      el.pvAuthor.textContent = "oleh " + b.author;
+      el.pvCat.textContent = b.cat;
+      el.pvCode.textContent = b.code;
+      el.pvStock.textContent = available(b.key);
+      el.pvMeta.hidden = false;
+      el.pvCover.className = "preview__cover has-book";
+      el.pvCover.style.background = `linear-gradient(135deg, ${b.color}, ${shade(b.color, -22)})`;
+      el.pvCover.textContent = b.title;
+    } else {
+      el.kode.value = "";
+      el.pvTitle.textContent = "Belum ada buku dipilih";
+      el.pvAuthor.textContent = "Pilih dari rak atau daftar judul.";
+      el.pvMeta.hidden = true;
+      el.pvCover.className = "preview__cover";
+      el.pvCover.style.background = "";
+      el.pvCover.innerHTML = '<i class="fa fa-book"></i>';
+    }
+    renderQty();
+    renderShelf();
+    clearError("buku");
+    updateProgress();
+  }
+ 
+  /* ---------- Jumlah buku (radio pill) ---------- */
+  function renderQty() {
+    const keep = (form.querySelector('input[name="jumlah"]:checked') || {}).value;
+    const b = bookByKey(el.buku.value);
+    const max = b ? Math.min(MAX_QTY, available(b.key)) : MAX_QTY;
+    el.qtyGroup.innerHTML = "";
+    for (let i = 1; i <= MAX_QTY; i++) {
+      const lab = document.createElement("label");
+      const inp = document.createElement("input");
+      inp.type = "radio"; inp.name = "jumlah"; inp.value = String(i);
+      inp.disabled = !!b && i > max;
+      if (keep && Number(keep) === i && !inp.disabled) inp.checked = true;
+      const sp = document.createElement("span");
+      sp.textContent = i;
+      lab.append(inp, sp);
+      el.qtyGroup.appendChild(lab);
+    }
+    if (!b) {
+      el.qtyHint.textContent = "Pilih buku terlebih dahulu untuk melihat stok.";
+    } else if (max === 0) {
+      el.qtyHint.textContent = "Maaf, stok buku ini sedang habis. Silakan pilih judul lain.";
+    } else {
+      el.qtyHint.textContent = `Stok tersedia ${available(b.key)} eksemplar. Maksimal ${max} buku.`;
+    }
+  }
+  el.qtyGroup.addEventListener("change", () => { clearError("jumlah"); updateProgress(); });
+  el.buku.addEventListener("change", onBookChange);
+ 
+  /* ---------- Tanggal ---------- */
+  function initDate() {
+    const today = new Date();
+    el.tanggal.min = toISO(today);
+    if (!el.tanggal.value) el.tanggal.value = toISO(today);
+    updateDue();
+  }
+  function updateDue() {
+    if (el.tanggal.value) {
+      const due = addDays(parseISO(el.tanggal.value), LOAN_DAYS);
+      el.dueInfo.innerHTML = `<i class="fa fa-clock-o"></i> Batas pengembalian: <strong>${fmtDate(due)}</strong>`;
+    }
+  }
+  el.tanggal.addEventListener("change", () => { updateDue(); clearError("tanggal"); updateProgress(); });
+ 
+  /* ---------- Input behaviour ---------- */
+  el.nim.addEventListener("input", () => { el.nim.value = el.nim.value.replace(/\D/g, ""); });
+  el.alasan.addEventListener("input", () => { el.counter.textContent = `${el.alasan.value.length} / 300`; });
+  ["nama", "nim", "kelas", "alasan"].forEach((id) => {
+    el[id].addEventListener("input", () => { clearError(id); updateProgress(); });
+  });
+ 
+  /* ---------- Validasi ---------- */
+  const errBox = (name) => $(`[data-error-for="${name}"]`);
+  function setError(name, msg) {
+    const box = errBox(name);
+    if (box) box.textContent = msg;
+    const f = (el[name] || {}).closest ? el[name].closest(".field") : null;
+    if (f) f.classList.add("invalid");
+    if (name === "jumlah") el.qtyGroup.closest(".field").classList.add("invalid");
+  }
+  function clearError(name) {
+    const box = errBox(name);
+    if (box) box.textContent = "";
+    const f = (el[name] || {}).closest ? el[name].closest(".field") : null;
+    if (f) f.classList.remove("invalid");
+    if (name === "jumlah") el.qtyGroup.closest(".field").classList.remove("invalid");
+  }
+ 
+  function validate() {
+    const errors = {};
+    const nama = el.nama.value.trim();
+    if (nama.length < 3) errors.nama = "Nama minimal 3 karakter.";
+    else if (!/^[\p{L}\s.'-]+$/u.test(nama)) errors.nama = "Nama hanya boleh berisi huruf.";
+ 
+    if (!/^\d{8,14}$/.test(el.nim.value)) errors.nim = "NIM harus berupa angka 8–14 digit.";
+    if (el.kelas.value.trim().length < 2) errors.kelas = "Kelas wajib diisi.";
+ 
+    if (!el.tanggal.value) errors.tanggal = "Pilih tanggal peminjaman.";
+    else if (parseISO(el.tanggal.value) < parseISO(toISO(new Date()))) errors.tanggal = "Tanggal tidak boleh sebelum hari ini.";
+ 
+    const b = bookByKey(el.buku.value);
+    if (!b) errors.buku = "Silakan pilih judul buku.";
+ 
+    const q = form.querySelector('input[name="jumlah"]:checked');
+    if (!q) errors.jumlah = b && available(b.key) === 0 ? "Stok buku ini habis." : "Pilih jumlah buku yang dipinjam.";
+ 
+    if (el.alasan.value.trim().length < 10) errors.alasan = "Alasan minimal 10 karakter.";
+    return errors;
+  }
+ 
+  /* ---------- Progress ---------- */
+  function updateProgress() {
+    const checks = [
+      el.nama.value.trim().length >= 3,
+      /^\d{8,14}$/.test(el.nim.value),
+      el.kelas.value.trim().length >= 2,
+      !!el.tanggal.value,
+      !!el.buku.value,
+      !!form.querySelector('input[name="jumlah"]:checked'),
+      el.alasan.value.trim().length >= 10
+    ];
+    const pct = Math.round((checks.filter(Boolean).length / checks.length) * 100);
+    el.progressFill.style.width = pct + "%";
+    el.progressText.textContent = pct + "%";
+    el.progressBar.setAttribute("aria-valuenow", pct);
+  }
+ 
+  /* ---------- Toast ---------- */
+  let toastTimer;
+  function toast(msg, isError) {
+    el.toast.textContent = msg;
+    el.toast.classList.toggle("error", !!isError);
+    el.toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.toast.classList.remove("show"), 3200);
+  }
+ 
+  /* ---------- Submit ---------- */
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    ["nama", "nim", "kelas", "tanggal", "buku", "jumlah", "alasan"].forEach(clearError);
+    const errors = validate();
+    const keys = Object.keys(errors);
+    if (keys.length) {
+      keys.forEach((k) => setError(k, errors[k]));
+      const first = keys[0] === "jumlah" ? el.qtyGroup : el[keys[0]];
+      first.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (first.focus && keys[0] !== "jumlah") first.focus({ preventScroll: true });
+      toast("Mohon periksa kembali isian formulir.", true);
+      return;
+    }
+ 
+    const b = bookByKey(el.buku.value);
+    const qty = Number(form.querySelector('input[name="jumlah"]:checked').value);
+    if (qty > available(b.key)) { setError("jumlah", "Jumlah melebihi stok tersedia."); return; }
+ 
+    const btn = $("#submitBtn");
+    btn.classList.add("loading");
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses…';
+ 
+    setTimeout(() => {
+      const start = parseISO(el.tanggal.value);
+      const loan = {
+        id: "TRX-" + Date.now().toString(36).toUpperCase(),
+        nama: el.nama.value.trim(),
+        nim: el.nim.value,
+        kelas: el.kelas.value.trim(),
+        bookKey: b.key,
+        title: b.title,
+        kode: b.code,
+        color: b.color,
+        qty,
+        genres: $$('input[name="genre"]:checked').map((c) => c.value),
+        alasan: el.alasan.value.trim(),
+        tanggal: el.tanggal.value,
+        kembali: toISO(addDays(start, LOAN_DAYS))
+      };
+      loans.unshift(loan);
+      stock[b.key] = available(b.key) - qty;
+      save(LS_LOANS, loans); save(LS_STOCK, stock);
+ 
+      renderHistory();
+      showReceipt(loan);
+      resetForm(true);
+ 
+      btn.classList.remove("loading");
+      btn.innerHTML = '<i class="fa fa-bookmark-o"></i> Pinjam Buku';
+    }, 700);
+  });
+ 
+  /* ---------- Struk ---------- */
+  function showReceipt(l) {
+    const rows = [
+      ["No. Transaksi", l.id],
+      ["Peminjam", l.nama],
+      ["NIM / Kelas", `${l.nim} / ${l.kelas}`],
+      ["Judul Buku", l.title],
+      ["Kode Buku", l.kode],
+      ["Jumlah", l.qty + " buku"],
+      ["Minat", l.genres.length ? l.genres.join(", ") : "—"],
+      ["Tanggal Pinjam", fmtShort(parseISO(l.tanggal))],
+      ["Wajib Kembali", fmtShort(parseISO(l.kembali))]
+    ];
+    el.receipt.innerHTML = "";
+    const dl = document.createElement("dl");
+    rows.forEach(([k, v]) => {
+      const d = document.createElement("div");
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = v;
+      d.append(dt, dd); dl.appendChild(d);
+    });
+    el.receipt.appendChild(dl);
+    openModal();
+  }
+ 
+  function openModal() {
+    el.modal.classList.add("open");
+    el.modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const done = $(".modal__dialog .btn--primary");
+    if (done) done.focus();
+  }
+  function closeModal() {
+    el.modal.classList.remove("open");
+    el.modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+  $$("[data-close]").forEach((n) => n.addEventListener("click", closeModal));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  $("#printBtn").addEventListener("click", () => window.print());
+ 
+  /* ---------- Riwayat ---------- */
+  function renderHistory() {
+    el.historyList.innerHTML = "";
+    el.emptyState.hidden = loans.length > 0;
+    $("#clearAll").hidden = loans.length === 0;
+    const today = parseISO(toISO(new Date()));
+ 
+    loans.forEach((l) => {
+      const late = parseISO(l.kembali) < today;
+      const card = document.createElement("article");
+      card.className = "loan";
+      card.style.setProperty("--book-color", l.color);
+ 
+      const h = document.createElement("h3"); h.textContent = l.title;
+      const who = document.createElement("p"); who.className = "loan__who";
+      who.textContent = `${l.nama} · ${l.nim} · ${l.kelas}`;
+ 
+      const rows = document.createElement("div"); rows.className = "loan__rows";
+      [
+        ["fa-barcode", `${l.kode} · ${l.qty} buku`],
+        ["fa-calendar-o", `Pinjam: ${fmtShort(parseISO(l.tanggal))}`],
+        ["fa-clock-o", `Kembali: ${fmtShort(parseISO(l.kembali))}`]
+      ].forEach(([ic, txt]) => {
+        const r = document.createElement("div");
+        const i = document.createElement("i"); i.className = "fa " + ic;
+        r.append(i, " " + txt); rows.appendChild(r);
+      });
+ 
+      const foot = document.createElement("div"); foot.className = "loan__foot";
+      const tag = document.createElement("span");
+      tag.className = "tag" + (late ? " tag--late" : "");
+      tag.textContent = late ? "Terlambat" : "Sedang dipinjam";
+      const del = document.createElement("button");
+      del.type = "button"; del.className = "link-btn";
+      del.innerHTML = '<i class="fa fa-undo"></i> Kembalikan';
+      del.addEventListener("click", () => returnLoan(l.id, card));
+      foot.append(tag, del);
+ 
+      card.append(h, who, rows, foot);
+      el.historyList.appendChild(card);
+    });
+  }
+ 
+  function returnLoan(id, card) {
+    const l = loans.find((x) => x.id === id);
+    if (!l) return;
+    card.classList.add("removing");
+    setTimeout(() => {
+      stock[l.bookKey] = available(l.bookKey) + l.qty;
+      loans = loans.filter((x) => x.id !== id);
+      save(LS_LOANS, loans); save(LS_STOCK, stock);
+      renderHistory(); refreshBookViews();
+      toast(`“${l.title}” telah dikembalikan. Terima kasih!`);
+    }, 280);
+  }
+ 
+  $("#clearAll").addEventListener("click", () => {
+    if (!loans.length) return;
+    if (!confirm("Hapus semua riwayat dan kembalikan seluruh stok buku?")) return;
+    loans.forEach((l) => { stock[l.bookKey] = available(l.bookKey) + l.qty; });
+    loans = [];
+    save(LS_LOANS, loans); save(LS_STOCK, stock);
+    renderHistory(); refreshBookViews();
+    toast("Riwayat dibersihkan.");
+  });
+ 
+  function refreshBookViews() {
+    renderShelf(); renderQty();
+    const b = bookByKey(el.buku.value);
+    if (b) el.pvStock.textContent = available(b.key);
+  }
+ 
+  /* ---------- Reset ---------- */
+  function resetForm(silent) {
+    form.reset();
+    ["nama", "nim", "kelas", "tanggal", "buku", "jumlah", "alasan"].forEach(clearError);
+    el.counter.textContent = "0 / 300";
+    el.tanggal.value = toISO(new Date());
+    onBookChange(); updateDue(); updateProgress();
+    if (!silent) toast("Formulir diatur ulang.");
+  }
+  $("#resetBtn").addEventListener("click", () => resetForm(false));
+ 
+  /* ---------- Reveal on scroll ---------- */
+  const revealEls = $$(".reveal");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    revealEls.forEach((n) => io.observe(n));
+  } else {
+    revealEls.forEach((n) => n.classList.add("in"));
+  }
+ 
+  /* ---------- Init ---------- */
+  $("#year").textContent = new Date().getFullYear();
+  initDate();
+  renderQty();
+  renderShelf();
+  renderHistory();
+  updateProgress();
+})();
+ 
+  </script>
+</body>
+</html>
