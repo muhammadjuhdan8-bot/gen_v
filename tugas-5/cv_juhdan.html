@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Muhammad Juhdan Alhakim</title>
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --accent: #2b7de9;
+            --text: #2d3748;
+            --muted: #718096;
+            --bg: #eef2f7;
+            --line: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 30px 15px;
+        }
+        .cv {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 32px 36px;
+        }
+        header img {
+            width: 130px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 3px solid #fff;
+        }
+        header h1 { font-size: 28px; letter-spacing: 0.5px; }
+        header .role { font-size: 16px; opacity: 0.9; margin: 4px 0 14px; }
+        .contact { font-size: 14px; }
+        .contact span { display: block; margin-bottom: 2px; }
+        .content { display: flex; }
+        aside {
+            width: 300px;
+            background: #f7fafc;
+            padding: 28px 26px;
+            border-right: 1px solid var(--line);
+        }
+        main { flex: 1; padding: 28px 34px; }
+        h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+        section { margin-bottom: 26px; }
+        .info-table td { padding: 3px 6px 3px 0; vertical-align: top; font-size: 14px; }
+        .info-table td:first-child { font-weight: 600; white-space: nowrap; }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag {
+            background: #e6f0fd;
+            color: var(--primary);
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 500;
+        }
+        ul.plain { list-style: none; }
+        ul.plain li {
+            font-size: 14px;
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 4px;
+        }
+        ul.plain li::before { content: "▸"; color: var(--accent); position: absolute; left: 0; }
+        .item { margin-bottom: 16px; }
+        .item h3 { font-size: 15px; color: var(--primary); }
+        .item .meta { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+        p, li { font-size: 14px; }
+        main ul { padding-left: 20px; }
+        @media (max-width: 720px) {
+            header { flex-direction: column; text-align: center; }
+            .content { flex-direction: column; }
+            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+        }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .cv { box-shadow: none; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+<div class="cv">
+
+    <header>
+        <img src="assets/IMG-20260905-WA0003.jpg" alt="Foto Muhammad Juhdan Alhakim">
+        <div>
+            <h1>Muhammad Juhdan Alhakim</h1>
+            <p class="role">Calon Full Stack Developer | Mahasiswa PeTIK II Jombang</p>
+            <div class="contact">
+                <span>📧 muhammadjuhdan61@gmail.com</span>
+                <span>📱 0895 - 3216 - 47903</span>
+                <span>🔗 github.com/muhammadjuhdan8</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+
+        <aside>
+            <section>
+                <h2>Data Diri</h2>
+                <table class="info-table">
+                    <tr><td>Umur</td><td>: 18 Tahun</td></tr>
+                    <tr><td>Status</td><td>: Belum Menikah</td></tr>
+                    <tr><td>Pendidikan</td><td>: Mahasiswa Teknik Informatika</td></tr>
+                </table>
+            </section>
+
+            <section>
+                <h2>Kemampuan Teknis</h2>
+                <div class="tags">
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">Python</span>
+                    <span class="tag">Flask</span>
+                    <span class="tag">SQLite</span>
+                    <span class="tag">Web Development</span>
+                    <span class="tag">Microsoft Office</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Kemampuan Nonteknis</h2>
+                <ul class="plain">
+                    <li>Problem Solving</li>
+                    <li>Critical Thinking</li>
+                    <li>Teamwork</li>
+                    <li>Communication</li>
+                    <li>Time Management</li>
+                    <li>Adaptability</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Hobi</h2>
+                <p style="color: #4a5568;">Berenang, badminton, lari, futsal</p>
+            </section>
+        </aside>
+
+        <main>
+            <section>
+                <h2>Profil Singkat</h2>
+                <p style="text-align: justify;">
+                    Mahasiswa PeTIK II Jombang yang tertarik pada teknologi informasi, khususnya pengembangan
+                    perangkat lunak dan website. Memiliki semangat belajar yang tinggi, kemampuan berpikir logis,
+                    serta antusias mempelajari bahasa pemrograman dan teknologi terbaru. Terus mengembangkan
+                    kemampuan full stack, mulai dari tampilan (front-end) hingga logika server dan database
+                    (back-end), melalui pembelajaran teori dan pembuatan proyek.
+                </p>
+            </section>
+
+            <section>
+                <h2>Pendidikan</h2>
+                <div class="item">
+                    <h3>PeTIK II Jombang</h3>
+                    <div class="meta">Mahasiswa Teknik Informatika | Tahun masuk: 2026</div>
+                </div>
+                <div class="item">
+                    <h3>SMK Nusa Jaya</h3>
+                    <div class="meta">Tahun: 2023 - 2026</div>
+                </div>
+                <div class="item">
+                    <h3>SMPN 8 Kota Tangerang</h3>
+                    <div class="meta">Tahun: 2021 - 2023</div>
+                </div>
+                <div class="item">
+                    <h3>SDN Jatake 2</h3>
+                    <div class="meta">Tahun: 2014 - 2020</div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Pengalaman</h2>
+                <div class="item">
+                    <h3>Praktik Kerja Lapangan (PKL) - Administrasi</h3>
+                    <div class="meta">PT Ekstrindo Laminasi | 18 Desember 2024 - 18 Februari 2025</div>
+                    <ul>
+                        <li>Menjalankan tugas administrasi harian perusahaan.</li>
+                        <li>Membantu pekerja dan tim di lapangan sebagai asisten sesuai kebutuhan.</li>
+                        <li style="color: #718096;">(Tambahkan tugas konkret, misalnya input data, pengarsipan, atau penggunaan Excel.)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>Proyek</h2>
+                <div class="item">
+                    <h3>1. Website Biodata</h3>
+                    <ul>
+                        <li>Membuat halaman website menggunakan HTML dan CSS.</li>
+                        <li>Menerapkan struktur halaman, navigasi, gambar, dan styling.</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <h3>2. Aplikasi Modal Usaha</h3>
+                    <ul>
+                        <li>Mengembangkan aplikasi sederhana menggunakan Python.</li>
+                        <li>Mengimplementasikan perhitungan modal, pemasukan, pengeluaran, dan keuntungan.</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <h3>3. Aplikasi Berbasis Web</h3>
+                    <ul>
+                        <li>Mempelajari pengembangan aplikasi menggunakan Flask.</li>
+                        <li>Mengenal penggunaan database SQLite.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <footer style="background: #1e3a5f; color: #cbd5e0; text-align: center; font-size: 12px; padding: 10px;">
+        Muhammad Juhdan Alhakim | Curriculum Vitae
+    </footer>
+
+</div>
+</body>
+</html>
