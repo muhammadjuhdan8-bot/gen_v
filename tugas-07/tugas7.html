@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeTIK Jombang - Pendidikan Vokasi IT & Pesantren</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        petik: {
+                            blue: '#0284c7',
+                            darkblue: '#0369a1',
+                            teal: '#0d9488',
+                            amber: '#f59e0b',
+                            lightamber: '#fef3c7',
+                            surface: '#f8fafc',
+                            carddark: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gradient-banner {
+            background: linear-gradient(135deg, #0284c7 0%, #0d9488 50%, #f59e0b 100%);
+        }
+        .font-arabic {
+            font-family: 'Amiri', serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-900">
+
+    <!-- Top Toast Notification System -->
+    <div id="toastNotification" class="fixed top-5 right-5 z-50 transform translate-y-[-120%] opacity-0 transition-all duration-300 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl bg-white dark:bg-slate-800 border-l-4 border-petik-blue text-sm text-slate-800 dark:text-slate-100">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-petik-blue text-lg"></i>
+        <span id="toastMessage">Pemberitahuan berhasil dimuat</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-200/80 dark:border-slate-800/80 shadow-sm transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand / Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-600 via-teal-500 to-amber-500 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid fa-infinity text-white text-2xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-sky-600 via-teal-600 to-amber-500 bg-clip-text text-transparent">
+                        PeTIK Jombang
+                    </span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 -mt-1">
+                        YBM PLN • IT & Pesantren
+                    </span>
+                </div>
+            </a>
+
+            <!-- Search input on center header (Desktop) -->
+            <div class="hidden md:flex items-center relative w-72 lg:w-96">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Cari materi, jurusan, kitab kuning..." 
+                       class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800/80 rounded-full border border-transparent focus:border-sky-500 dark:focus:border-sky-400 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all">
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleTheme()" id="themeToggleBtn" aria-label="Toggle Theme" 
+                        class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition-colors">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+
+                <!-- Action Button -->
+                <button onclick="openModal('registerModal')" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 shadow-md shadow-sky-600/25 hover:shadow-lg transition-all duration-200">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Daftar Santri</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileNav()" class="md:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Dropdown -->
+        <div id="mobileSearch" class="px-4 pb-3 md:hidden">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                <input type="text" oninput="handleSearch(this.value)" placeholder="Cari informasi materi..." 
+                       class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800 rounded-lg outline-none">
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero / Headline Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 w-full">
+        <div class="relative overflow-hidden rounded-3xl p-6 sm:p-8 md:p-10 text-white shadow-xl bg-gradient-to-r from-sky-700 via-teal-700 to-amber-600">
+            <!-- Background Graphic Patterns -->
+            <div class="absolute -right-16 -top-16 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute right-32 -bottom-20 w-80 h-80 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="space-y-3 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-amber-200 text-xs font-semibold uppercase tracking-wider">
+                        <i class="fa-solid fa-bolt-lightning text-amber-300"></i> Beasiswa Penuh 1 Tahun YBM PLN
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                        Pendidikan Vokasi IT Berbasis Pesantren Modern
+                    </h1>
+                    <p class="text-sm sm:text-base text-sky-100 font-normal leading-relaxed">
+                        Membina generasi dhuafa berdaya saing global melalui penguasaan teknologi digital mutakhir serta pondasi kokoh Kitab Kuning bersanad.
+                    </p>
+                </div>
+
+                <!-- Fast Stat Badges -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div class="bg-black/20 backdrop-blur-md rounded-2xl p-3 border border-white/15 text-center">
+                        <div class="text-2xl font-black text-amber-300">100%</div>
+                        <div class="text-[11px] text-slate-100 font-medium">Free Beasiswa</div>
+                    </div>
+                    <div class="bg-black/20 backdrop-blur-md rounded-2xl p-3 border border-white/15 text-center">
+                        <div class="text-2xl font-black text-white">2</div>
+                        <div class="text-[11px] text-slate-100 font-medium">Jurusan Vokasi</div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 bg-black/20 backdrop-blur-md rounded-2xl p-3 border border-white/15 text-center">
+                        <div class="text-2xl font-black text-teal-300">Sanad</div>
+                        <div class="text-[11px] text-slate-100 font-medium">Kitab Kuning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main 3-Column Layout Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- LEFT COLUMN: Jurusan & Program Cards (3 of 12 columns) -->
+            <aside class="lg:col-span-3 space-y-6 order-2 lg:order-1">
+                
+                <!-- Jurusan Card 1: PPL -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-sky-500/10 dark:bg-sky-500/20 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
+                    
+                    <div class="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <span class="text-[11px] font-bold tracking-wider text-sky-600 dark:text-sky-400 uppercase">Jurusan Unggulan</span>
+                    <h3 class="text-lg font-bold mt-1 text-slate-900 dark:text-white">Pengembangan Perangkat Lunak</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                        Fokus pada pembuatan web responsif, aplikasi mobile, arsitektur UI/UX modern, dan perancangan database enterprise.
+                    </p>
+
+                    <!-- Tech Tags -->
+                    <div class="mt-4 flex flex-wrap gap-1.5">
+                        <span class="text-[10px] font-semibold bg-sky-50 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300 px-2 py-0.5 rounded-md">Web App</span>
+                        <span class="text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-md">Mobile App</span>
+                        <span class="text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md">Database</span>
+                        <span class="text-[10px] font-semibold bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-md">UI/UX</span>
+                    </div>
+
+                    <button onclick="filterCurriculum('ppl')" class="mt-5 w-full py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-sky-600 hover:text-white dark:hover:bg-sky-600 transition-colors flex items-center justify-center gap-1.5">
+                        <span>Lihat Detail PPL</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+
+                <!-- Jurusan Card 2: DM -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 dark:bg-amber-500/20 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
+                    
+                    <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-bullhorn"></i>
+                    </div>
+
+                    <span class="text-[11px] font-bold tracking-wider text-amber-600 dark:text-amber-400 uppercase">Jurusan Unggulan</span>
+                    <h3 class="text-lg font-bold mt-1 text-slate-900 dark:text-white">Digital Marketing (DM)</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                        Menguasai optimasi SEO, Meta & TikTok Ads, content strategy, serta funneling konversi bisnis digital.
+                    </p>
+
+                    <!-- Tech Tags -->
+                    <div class="mt-4 flex flex-wrap gap-1.5">
+                        <span class="text-[10px] font-semibold bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-md">SEO Expert</span>
+                        <span class="text-[10px] font-semibold bg-rose-50 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-md">Ads Traffic</span>
+                        <span class="text-[10px] font-semibold bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-md">Copywriting</span>
+                    </div>
+
+                    <button onclick="filterCurriculum('dm')" class="mt-5 w-full py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 transition-colors flex items-center justify-center gap-1.5">
+                        <span>Lihat Detail DM</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+
+                <!-- Interactive App Showcase / "Iklan Android" Modern Widget -->
+                <div class="rounded-3xl p-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-lg relative overflow-hidden">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center text-lg">
+                            <i class="fa-brands fa-android"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold">Karya Mobile Mahasantri</h4>
+                            <p class="text-[11px] text-slate-400">Siap rilis di Google Play Store</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-slate-800/80 rounded-2xl p-3 border border-slate-700 text-center">
+                        <i class="fa-solid fa-mobile-screen-button text-4xl text-amber-400 my-2 animate-bounce"></i>
+                        <p class="text-xs text-slate-300 font-medium">Santri Digital Hub v2.4</p>
+                        <p class="text-[10px] text-slate-500">Al-Quran, Absensi GPS, & Portofolio</p>
+                    </div>
+                    <button onclick="showToast('Fitur unduh portofolio mahasantri dibuka!')" class="mt-4 w-full py-2 rounded-xl text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white transition-colors">
+                        Eksplorasi Project Santri
+                    </button>
+                </div>
+            </aside>
+
+            <!-- CENTER COLUMN: Main Content & Article (6 of 12 columns) -->
+            <article class="lg:col-span-6 space-y-6 order-1 lg:order-2">
+                
+                <!-- Main Featured Article Card -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm">
+                    
+                    <!-- Article Meta -->
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-5">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Informasi Resmi Lembaga</span>
+                        </div>
+                        <span class="text-xs text-slate-400"><i class="fa-regular fa-calendar-check mr-1"></i> T.A. 2026/2027</span>
+                    </div>
+
+                    <!-- Article Title -->
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug">
+                        Mencetak Generasi Mahasantri IT Berakhlak Qurani & Siap Kerja
+                    </h2>
+
+                    <!-- Article Body -->
+                    <div class="prose prose-slate dark:prose-invert max-w-none text-sm text-slate-600 dark:text-slate-300 mt-4 space-y-3.5 leading-relaxed">
+                        <p>
+                            <strong>Pesantren Teknologi Informasi dan Komunikasi (PeTIK) Jombang</strong> merupakan lembaga pendidikan vokasi berbasis kepesantrenan di bawah naungan <strong>Yayasan Baitul Maal (YBM) PLN</strong>. PeTIK bertekad menebarkan kemaslahatan umat dengan menyediakan beasiswa penuh 1 (satu) tahun bagi anak-anak dhuafa berpotensi dari berbagai penjuru nusantara.
+                        </p>
+                        <p>
+                            Melalui kurikulum komprehensif, santri tidak hanya ditempa menjadi praktisi IT yang lihai dalam <em>Software Engineering</em> dan <em>Digital Marketing</em>, tetapi juga mengkaji ilmu syariat Islam melalui <strong>sanad keilmuan para ulama terpercaya</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Curriculum Interactive Tabs -->
+                    <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                Integrasi Dua Kurikulum Utama
+                            </h3>
+                            <span class="text-xs text-petik-blue dark:text-sky-400 font-medium">Klik tab untuk beralih</span>
+                        </div>
+
+                        <!-- Tab Buttons -->
+                        <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl gap-1">
+                            <button id="tabTechBtn" onclick="switchCurriculum('tech')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all shadow-sm bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400">
+                                <i class="fa-solid fa-laptop-code mr-1.5"></i> Vokasi Teknologi
+                            </button>
+                            <button id="tabSantriBtn" onclick="switchCurriculum('pesantren')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                                <i class="fa-solid fa-book-quran mr-1.5"></i> Kajian Kitab Kuning
+                            </button>
+                        </div>
+
+                        <!-- Tab 1: Tech Modules Content -->
+                        <div id="techContent" class="mt-5 space-y-3 block">
+                            <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-sky-100 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-layer-group text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">Pengembangan Web & Aplikasi Mobile (PPL)</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Pemrograman modern, API RESTful, Database SQL/NoSQL, dan UI/UX fungsional.</p>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-chart-line text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">Digital Marketing & SEO (DM)</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Optimasi mesin pencari, kampanye media sosial berbayar, dan analitik performa bisnis.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Kitab Kuning Modules Content (Hidden by default) -->
+                        <div id="pesantrenContent" class="mt-5 space-y-2 hidden">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-2 italic">
+                                Sanad keilmuan yang bersambung dengan bimbingan ustadz ahli di bidangnya:
+                            </p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Hadits Arba'in Nawawi</span>
+                                    <span class="text-xs font-arabic text-amber-600 dark:text-amber-400">حديث</span>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Aqidatul Awam (Tauhid)</span>
+                                    <span class="text-xs font-arabic text-amber-600 dark:text-amber-400">عقيدة</span>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Safinatun Najah & Fathul Qorib</span>
+                                    <span class="text-xs font-arabic text-amber-600 dark:text-amber-400">فقه</span>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Sulam Taufiq & Bidayatul Hidayah</span>
+                                    <span class="text-xs font-arabic text-amber-600 dark:text-amber-400">تصوف</span>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Tafsir Al-Ibriz</span>
+                                    <span class="text-xs font-arabic text-amber-600 dark:text-amber-400">تفسير</span>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Jurumiyah (Nahwu)</span>
+                                    <span class="text-xs font-arabic text-amber-600 dark:text-amber-400">نحو</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Interactive Quote of The Day -->
+                    <div class="mt-6 p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/40 flex items-start gap-3">
+                        <i class="fa-solid fa-quote-left text-amber-500 text-lg mt-0.5"></i>
+                        <div>
+                            <p class="text-xs italic text-amber-900 dark:text-amber-200 font-medium">
+                                "Menuntut ilmu teknologi untuk kebermanfaatan umat, dibalut adab dan tawadhu warisan ulama salafus shalih."
+                            </p>
+                            <span class="text-[10px] text-amber-700 dark:text-amber-400 block mt-1 font-semibold">— Motto Mahasantri PeTIK Jombang</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </article>
+
+            <!-- RIGHT COLUMN: Fast Navigation, News & Contacts (3 of 12 columns) -->
+            <aside class="lg:col-span-3 space-y-6 order-3">
+                
+                <!-- Quick Menu Links Card -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 flex items-center justify-between">
+                        <span>Akses Kilat</span>
+                        <i class="fa-solid fa-compass text-petik-blue"></i>
+                    </h3>
+                    
+                    <nav class="space-y-1.5" id="navPills">
+                        <a href="#beranda" onclick="setActiveNav(this)" class="nav-item flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 transition-colors">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-house w-4 text-center"></i> Beranda
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
+                        </a>
+
+                        <a href="#article" onclick="setActiveNav(this)" class="nav-item flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fa-regular fa-newspaper w-4 text-center"></i> Artikel & Wawasan
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
+                        </a>
+
+                        <button onclick="openModal('registerModal')" class="w-full nav-item flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-file-signature w-4 text-center text-amber-500"></i> Pendaftaran Mahasantri
+                            </span>
+                            <span class="text-[10px] bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold">Buka</span>
+                        </button>
+
+                        <a href="#galeri" onclick="showGalleryPreview()" class="nav-item flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <span class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-images w-4 text-center text-teal-500"></i> Galeri Kegiatan
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Registration Counter / Status Banner -->
+                <div class="bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-900 rounded-3xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-bold uppercase tracking-wide">Penerimaan Santri Baru</span>
+                        <i class="fa-solid fa-bell text-sm"></i>
+                    </div>
+                    <div class="text-xl font-extrabold tracking-tight">Angkatan Generasi VI</div>
+                    <p class="text-xs text-amber-950/80 mt-1">Kuota Terbatas untuk Mahasantri Berprestasi Dhuafa.</p>
+                    <button onclick="openModal('registerModal')" class="mt-4 w-full py-2.5 text-xs font-bold bg-slate-950 text-white hover:bg-slate-900 rounded-xl transition-all shadow-md">
+                        Isi Formulir Seleksi
+                    </button>
+                </div>
+
+                <!-- Contact & Social Hub -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
+                        Hubungi Kampus
+                    </h3>
+                    <ul class="space-y-2.5 text-xs">
+                        <li>
+                            <a href="https://wa.me/" target="_blank" class="flex items-center gap-3 p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                </div>
+                                <span class="font-medium">+62 812-XXXX-XXXX</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center gap-3 p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-950 text-pink-600 dark:text-pink-400 flex items-center justify-center">
+                                    <i class="fa-brands fa-instagram text-sm"></i>
+                                </div>
+                                <span class="font-medium">@petik_jombang</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center gap-3 p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-location-dot text-sm"></i>
+                                </div>
+                                <span class="font-medium">Jombang, Jawa Timur</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                <i class="fa-solid fa-code text-amber-500"></i>
+                <span>&copy; 2026 <strong>PeTIK Jombang</strong>. Dikembangkan oleh <em>Software Development Gen-V</em>.</span>
+            </div>
+
+            <div class="flex items-center gap-4 text-slate-400 dark:text-slate-500">
+                <a href="#" class="hover:text-petik-blue transition-colors text-sm"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="hover:text-pink-500 transition-colors text-sm"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-red-500 transition-colors text-sm"><i class="fa-brands fa-youtube"></i></a>
+                <button onclick="scrollToTop()" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-sky-600 hover:text-white dark:hover:bg-sky-600 text-slate-600 dark:text-slate-400 flex items-center justify-center transition-all ml-2" title="Kembali ke atas">
+                    <i class="fa-solid fa-arrow-up text-xs"></i>
+                </button>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Interactive Registration / Contact Modal -->
+    <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative transform scale-95 transition-transform duration-200" id="modalBox">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal('registerModal')" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Formulir Minat Pendaftaran</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Beasiswa Penuh 1 Tahun PeTIK Jombang</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap Calon Santri</label>
+                    <input type="text" required placeholder="Contoh: Muhammad Fatih" 
+                           class="w-full px-3.5 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 focus:border-sky-500 dark:focus:border-sky-400 outline-none">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nomor WhatsApp</label>
+                        <input type="tel" required placeholder="08xxxxxxxxxx" 
+                               class="w-full px-3.5 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 focus:border-sky-500 dark:focus:border-sky-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Pilihan Konsentrasi</label>
+                        <select class="w-full px-3.5 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 focus:border-sky-500 dark:focus:border-sky-400 outline-none">
+                            <option value="PPL">Pengembangan Perangkat Lunak (PPL)</option>
+                            <option value="DM">Digital Marketing (DM)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Asal Daerah / Kota</label>
+                    <input type="text" required placeholder="Contoh: Jombang, Jawa Timur" 
+                           class="w-full px-3.5 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 focus:border-sky-500 dark:focus:border-sky-400 outline-none">
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeModal('registerModal')" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 shadow-md">
+                        Kirim Pendaftaran
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Gallery Preview Modal -->
+    <div id="galleryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-3xl p-6 shadow-2xl relative">
+            <button onclick="closeModal('galleryModal')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4">Galeri Aktivitas Mahasantri PeTIK</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl p-4 text-center aspect-video flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-code text-2xl text-sky-500 mb-1"></i>
+                    <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Lab Coding PPL</span>
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl p-4 text-center aspect-video flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-book-open-reader text-2xl text-amber-500 mb-1"></i>
+                    <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Halaqah Kitab Kuning</span>
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl p-4 text-center aspect-video flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-bullhorn text-2xl text-teal-500 mb-1"></i>
+                    <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Workshop SEO & Ads</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-side Logic -->
+    <script>
+        // Theme initialization and toggle
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            updateThemeIcon(isDark);
+            showToast(isDark ? 'Mode gelap diaktifkan 🌙' : 'Mode terang diaktifkan ☀️');
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('themeIcon');
+            if (isDark) {
+                icon.className = 'fa-solid fa-sun text-lg text-amber-400';
+            } else {
+                icon.className = 'fa-solid fa-moon text-lg text-slate-600';
+            }
+        }
+
+        // Switch curriculum tabs (Teknologi vs Pesantren)
+        function switchCurriculum(type) {
+            const techContent = document.getElementById('techContent');
+            const pesantrenContent = document.getElementById('pesantrenContent');
+            const tabTechBtn = document.getElementById('tabTechBtn');
+            const tabSantriBtn = document.getElementById('tabSantriBtn');
+
+            if (type === 'tech') {
+                techContent.classList.remove('hidden');
+                pesantrenContent.classList.add('hidden');
+                
+                tabTechBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all shadow-sm bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400';
+                tabSantriBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+            } else {
+                techContent.classList.add('hidden');
+                pesantrenContent.classList.remove('hidden');
+
+                tabSantriBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all shadow-sm bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400';
+                tabTechBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+            }
+        }
+
+        function filterCurriculum(jurusan) {
+            switchCurriculum('tech');
+            showToast(jurusan === 'ppl' ? 'Menampilkan detail kurikulum PPL (Software Engineering)' : 'Menampilkan detail kurikulum DM (Digital Marketing)');
+        }
+
+        // Search highlight simulator
+        function handleSearch(term) {
+            if (term.trim().length > 2) {
+                showToast(`Mencari topik: "${term}"...`);
+            }
+        }
+
+        // Modal Handlers
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function showGalleryPreview() {
+            openModal('galleryModal');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            closeModal('registerModal');
+            showToast('Alhamdulillah, pendaftaran berhasil dikirim! Panitia akan menghubungi Anda via WhatsApp.');
+            e.target.reset();
+        }
+
+        // Active Navigation state
+        function setActiveNav(element) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300');
+                item.classList.add('text-slate-700', 'dark:text-slate-300');
+            });
+            element.classList.add('bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300');
+            element.classList.remove('text-slate-700', 'dark:text-slate-300');
+        }
+
+        // Toast feedback
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            
+            clearTimeout(toastTimeout);
+            toast.classList.remove('translate-y-[-120%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-120%]', 'opacity-0');
+            }, 3500);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileNav() {
+            const search = document.getElementById('mobileSearch');
+            search.classList.toggle('hidden');
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+        });
+    </script>
+</body>
+</html>
