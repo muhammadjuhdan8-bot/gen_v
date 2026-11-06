@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PeTIK II Jombang YBM PLN - Pesantren Teknologi Informasi dan Komunikasi. Mencetak SDM IT Profesional dan Berakhlakul Karimah.">
+    <title>PeTIK II Jombang | Energi Kebaikan YBM PLN</title>
+    
+    <!-- Fonts: Plus Jakarta Sans (Modern Clean) & Amiri (Islamic Touch) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. CORE VARIABLES & THEME SYSTEM (PLN + ISLAMIC)
+           ========================================= */
+        :root {
+            /* PLN Brand Colors */
+            --pln-cyan: #00A2E9;
+            --pln-blue: #00529C;
+            --pln-yellow: #FFD100;
+            
+            /* Islamic Accents */
+            --islamic-emerald: #065F46;
+            --islamic-gold: #D4AF37;
+            --islamic-sand: #FDFBF7;
+
+            /* Functional Light Theme */
+            --primary: var(--pln-cyan);
+            --primary-dark: var(--pln-blue);
+            --secondary: var(--islamic-emerald);
+            --accent: var(--pln-yellow);
+            --gold: var(--islamic-gold);
+            
+            --bg-body: var(--islamic-sand);
+            --bg-surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sidebar-bg: #ffffff;
+            
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 162, 233, 0.15);
+            
+            --sidebar-width: 300px;
+            --topbar-height: 80px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            
+            /* Islamic Geometric Pattern - SVG Data URI */
+            --pattern-bg: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300a2e9' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        [data-bs-theme="dark"] {
+            --bg-body: #0B1120;
+            --bg-surface: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --sidebar-bg: #0F172A;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --pattern-bg: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffd100' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            background-image: var(--pattern-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            cursor: none; /* For custom cursor */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* =========================================
+           2. SPLASH SCREEN (PLN ENERGY x ISLAMIC)
+           ========================================= */
+        .splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-body); z-index: 999999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            background-image: var(--pattern-bg);
+        }
+        .splash-screen.hidden { opacity: 0; visibility: hidden; }
+        .splash-logo {
+            font-size: 4rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 20px rgba(0, 162, 233, 0.5));
+            animation: pulse-energy 1.5s infinite;
+        }
+        .splash-text {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fade-up 1s ease 0.5s forwards;
+        }
+        .loading-bar {
+            width: 200px; height: 4px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px; margin-top: 2rem;
+            overflow: hidden; position: relative;
+        }
+        .loading-progress {
+            position: absolute; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            animation: load 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-energy {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(0, 162, 233, 0.5)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 40px rgba(255, 209, 0, 0.8)); }
+        }
+        @keyframes load { 100% { left: 100%; } }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           3. CUSTOM CURSOR (GLOWING SPARK)
+           ========================================= */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 2px solid var(--primary);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .hovered .cursor-outline {
+            width: 60px; height: 60px;
+            background-color: rgba(0, 162, 233, 0.1);
+            border-color: var(--accent);
+            backdrop-filter: blur(2px);
+        }
+
+        /* =========================================
+           4. LAYOUT & SIDEBAR NAVIGATION
+           ========================================= */
+        .app-container { display: flex; min-height: 100vh; }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            height: 100vh; position: fixed; left: 0; top: 0;
+            z-index: 1040;
+            border-right: 1px solid var(--glass-border);
+            display: flex; flex-direction: column;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.02);
+        }
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .brand-logo {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none;
+        }
+        .brand-icon {
+            width: 45px; height: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 162, 233, 0.3);
+        }
+        .brand-text h4 { margin: 0; color: var(--primary-dark); font-weight: 800; }
+        .brand-text span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+        
+        [data-bs-theme="dark"] .brand-text h4 { color: var(--text-main); }
+
+        .nav-menu { padding: 1.5rem 1rem; overflow-y: auto; flex-grow: 1; }
+        .nav-item {
+            display: flex; align-items: center; gap: 15px;
+            padding: 12px 20px; color: var(--text-main);
+            text-decoration: none; font-weight: 600;
+            border-radius: 12px; margin-bottom: 8px;
+            transition: var(--transition);
+            position: relative; overflow: hidden;
+        }
+        .nav-item i { font-size: 1.2rem; color: var(--text-muted); transition: var(--transition); width: 24px; text-align: center; }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 162, 233, 0.08);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(0, 162, 233, 0.1), transparent);
+            border-left: 4px solid var(--primary);
+        }
+        .nav-item:hover i, .nav-item.active i { color: var(--primary); }
+
+        .sidebar-footer { padding: 1.5rem; border-top: 1px solid var(--glass-border); }
+        .btn-register {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; border: none; border-radius: 12px;
+            padding: 12px; font-weight: 700; width: 100%;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 162, 233, 0.3);
+        }
+        .btn-register:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 162, 233, 0.4); color: var(--accent); }
+
+        /* =========================================
+           5. MAIN CONTENT & TOPBAR
+           ========================================= */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            transition: var(--transition);
+        }
+        .topbar {
+            height: var(--topbar-height);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky; top: 0; z-index: 1030;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem;
+        }
+        .theme-btn {
+            background: rgba(0,0,0,0.05); border: none;
+            width: 45px; height: 45px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .theme-btn:hover { background: var(--primary); color: white; transform: rotate(15deg); }
+        [data-bs-theme="dark"] .theme-btn { background: rgba(255,255,255,0.1); color: var(--accent); }
+
+        /* =========================================
+           6. HERO SECTION (ISLAMIC x PLN)
+           ========================================= */
+        .hero-section {
+            min-height: 100vh;
+            display: flex; align-items: center;
+            position: relative; overflow: hidden;
+            padding: 6rem 0;
+        }
+        .hero-glow-1, .hero-glow-2 {
+            position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1;
+            animation: pulse-glow 8s infinite alternate;
+        }
+        .hero-glow-1 { width: 500px; height: 500px; background: rgba(0, 162, 233, 0.15); top: -10%; left: -5%; }
+        .hero-glow-2 { width: 400px; height: 400px; background: rgba(255, 209, 0, 0.1); bottom: 10%; right: -5%; animation-delay: 4s; }
+        
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(0, 162, 233, 0.1);
+            color: var(--primary); border: 1px solid rgba(0, 162, 233, 0.2);
+            padding: 8px 16px; border-radius: 30px; font-weight: 600; font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title {
+            font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem;
+        }
+        .text-gradient-pln {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-gold {
+            background: linear-gradient(135deg, var(--gold), #FBBF24);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-image-wrapper { position: relative; }
+        .hero-image {
+            border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 8px solid var(--bg-surface);
+            position: relative; z-index: 2;
+        }
+        .hero-arch-bg {
+            position: absolute; top: -5%; right: -5%;
+            width: 100%; height: 100%;
+            background: var(--primary); opacity: 0.1;
+            border-radius: 200px 200px 0 0; /* Islamic Arch */
+            z-index: 1;
+        }
+        .floating-card {
+            position: absolute; bottom: -20px; left: -30px;
+            background: var(--bg-surface); padding: 20px;
+            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 3; border: 1px solid var(--glass-border);
+            display: flex; align-items: center; gap: 15px;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* =========================================
+           7. FASILITAS (ISLAMIC ARCH CARDS)
+           ========================================= */
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-subtitle { color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; display: block; margin-bottom: 10px; }
+        
+        .facility-card {
+            background: var(--bg-surface);
+            border-radius: 24px 24px 8px 8px; /* Slight Arch hint */
+            padding: 40px 30px; height: 100%;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            transition: var(--transition);
+            position: relative; overflow: hidden;
+            z-index: 1;
+        }
+        .facility-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+        }
+        .facility-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary); }
+        .facility-card:hover::before { transform: scaleX(1); }
+        
+        .f-icon {
+            width: 70px; height: 70px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin-bottom: 25px;
+            background: rgba(0, 162, 233, 0.08); color: var(--primary);
+            transition: var(--transition);
+        }
+        .facility-card:hover .f-icon { background: var(--primary); color: white; transform: rotateY(180deg); }
+        .f-icon.islamic { background: rgba(6, 95, 70, 0.08); color: var(--secondary); }
+        .facility-card:hover .f-icon.islamic { background: var(--secondary); color: white; }
+
+        /* =========================================
+           8. ALUR PENDAFTARAN (TIMELINE)
+           ========================================= */
+        .timeline-section { background: var(--sidebar-bg); padding: 6rem 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 100%; background: var(--glass-border); transform: translateX(-50%); }
+        .timeline-item { position: relative; margin-bottom: 3rem; width: 50%; padding-right: 40px; }
+        .timeline-item:nth-child(even) { margin-left: 50%; padding-right: 0; padding-left: 40px; }
+        .timeline-dot {
+            position: absolute; top: 0; right: -10px; width: 20px; height: 20px;
+            background: var(--accent); border: 4px solid var(--bg-surface);
+            border-radius: 50%; z-index: 2; box-shadow: 0 0 0 4px rgba(255, 209, 0, 0.2);
+        }
+        .timeline-item:nth-child(even) .timeline-dot { right: auto; left: -10px; }
+        .timeline-content {
+            background: var(--bg-surface); padding: 25px; border-radius: 16px;
+            border: 1px solid var(--glass-border); box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            transition: var(--transition);
+        }
+        .timeline-content:hover { transform: scale(1.03); border-color: var(--primary); }
+        .timeline-date { font-weight: 700; color: var(--primary); margin-bottom: 10px; display: inline-block; padding: 4px 12px; background: rgba(0,162,233,0.1); border-radius: 20px; font-size: 0.85rem;}
+
+        /* =========================================
+           9. CHIBI MASCOT WIDGET
+           ========================================= */
+        .mascot-container {
+            position: fixed; bottom: 30px; right: 40px; z-index: 1050;
+            display: flex; flex-direction: column; align-items: flex-end; pointer-events: none;
+        }
+        .mascot-bubble {
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            border: 2px solid var(--primary); color: var(--text-main);
+            padding: 15px 25px; border-radius: 24px 24px 0 24px;
+            margin-bottom: 15px; font-weight: 600; max-width: 280px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 162, 233, 0.2);
+            opacity: 0; transform: translateY(20px) scale(0.8); transform-origin: bottom right;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: auto;
+        }
+        .mascot-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
+        .mascot-img {
+            width: 120px; cursor: pointer; pointer-events: auto;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            animation: float 3s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+        .mascot-img:hover { transform: scale(1.1) rotate(-5deg); animation-play-state: paused; }
+
+        /* =========================================
+           10. ANIMATIONS & RESPONSIVE
+           ========================================= */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes pulse-glow { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1.1); } }
+        
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
+
+        .mobile-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-main); }
+        
+        @media (max-width: 991.98px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; }
+            .mobile-toggle { display: block; }
+            .cursor-dot, .cursor-outline { display: none; } /* Disable custom cursor on mobile */
+            body { cursor: auto; }
+            .hero-title { font-size: 2.5rem; }
+            .timeline::before { left: 30px; }
+            .timeline-item { width: 100%; padding-left: 80px; padding-right: 0; }
+            .timeline-item:nth-child(even) { margin-left: 0; padding-left: 80px; }
+            .timeline-dot { left: 20px !important; right: auto !important; }
+            .mascot-container { bottom: 20px; right: 20px; }
+            .mascot-img { width: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen" class="splash-screen">
+        <i class="fa-solid fa-bolt splash-logo"></i>
+        <div class="splash-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+        <div class="loading-bar"><div class="loading-progress"></div></div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="brand-logo" data-hover>
+                    <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="brand-text">
+                        <h4>PeTIK II</h4>
+                        <span>YBM PLN Jombang</span>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#beranda" class="nav-item active" data-hover><i class="fa-solid fa-house"></i> Beranda Utama</a>
+                <a href="#tentang" class="nav-item" data-hover><i class="fa-solid fa-building-columns"></i> Tentang Lembaga</a>
+                <a href="#fasilitas" class="nav-item" data-hover><i class="fa-solid fa-gem"></i> Privilege Santri</a>
+                <a href="#program" class="nav-item" data-hover><i class="fa-solid fa-laptop-code"></i> Program Studi IT</a>
+                <a href="#alur" class="nav-item" data-hover><i class="fa-solid fa-route"></i> Alur Pendaftaran</a>
+                <a href="#kontak" class="nav-item" data-hover><i class="fa-solid fa-map-location-dot"></i> Lokasi Kampus</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-register" data-hover>
+                    <i class="fa-solid fa-user-plus me-2"></i> Daftar Sekarang 2027
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="mobile-toggle" id="sidebarToggle" aria-label="Toggle Menu" data-hover>
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                    <div class="d-none d-md-block arabic-text mb-0 fs-5">
+                        السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="theme-btn" id="themeToggle" aria-label="Toggle Dark Mode" data-hover>
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 1. HERO SECTION -->
+            <section id="beranda" class="hero-section">
+                <div class="hero-glow-1"></div>
+                <div class="hero-glow-2"></div>
+                
+                <div class="container px-4 px-lg-5">
+                    <div class="row align-items-center g-5">
+                        <div class="col-lg-7 reveal">
+                            <div class="hero-badge">
+                                <i class="fa-solid fa-star text-warning"></i> Beasiswa Penuh YBM PLN 1 Tahun
+                            </div>
+                            <h1 class="hero-title">
+                                Energi <span class="text-gradient-pln">Kebaikan</span>,<br>
+                                Menerangi <span class="text-gradient-gold">Peradaban Digital</span>.
+                            </h1>
+                            <p class="lead text-muted mb-5 pe-lg-5" style="line-height: 1.8;">
+                                Pesantren vokasi IT yang dirancang khusus untuk mentransformasi mustahik menjadi muzakki. Mencetak generasi *Software Engineer* dan *Digital Marketer* profesional yang berakhlakul karimah.
+                            </p>
+                            <div class="d-flex flex-wrap gap-3">
+                                <a href="#fasilitas" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm" style="background: var(--primary); border:none;" data-hover>
+                                    Eksplorasi Program <i class="fa-solid fa-arrow-right ms-2"></i>
+                                </a>
+                                <a href="#tentang" class="btn btn-outline-secondary btn-lg rounded-pill px-5" data-hover>
+                                    <i class="fa-solid fa-play me-2"></i> Video Profil
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 d-none d-lg-block reveal delay-2">
+                            <div class="hero-image-wrapper">
+                                <div class="hero-arch-bg"></div>
+                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Santri Belajar IT" class="img-fluid hero-image">
+                                
+                                <div class="floating-card">
+                                    <div class="fs-1 text-success"><i class="fa-solid fa-circle-check"></i></div>
+                                    <div>
+                                        <h4 class="mb-0 fw-bold">100%</h4>
+                                        <span class="text-muted small">Gratis + Uang Saku</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. PRIVILEGE SANTRI (FASILITAS) -->
+            <section id="fasilitas" class="py-5 my-5">
+                <div class="container px-4 px-lg-5">
+                    <div class="section-title reveal">
+                        <span class="section-subtitle">Privilege Santri</span>
+                        <h2 class="display-5 fw-bold mb-3">Fasilitas & Dukungan Penuh</h2>
+                        <p class="text-muted mx-auto" style="max-width: 600px;">Sebagai wujud nyata penyaluran dana zakat YBM PLN, seluruh santri mendapatkan ekosistem pendidikan tanpa kompromi.</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Card 1 -->
+                        <div class="col-xl-4 col-md-6 reveal">
+                            <div class="facility-card" data-hover>
+                                <div class="f-icon islamic"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                                <h4 class="mb-3">Beasiswa Penuh</h4>
+                                <p class="text-muted small">Pendidikan gratis 100% tanpa dipungut biaya apapun selama masa pendidikan untuk keluarga dhuafa terpilih.</p>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="col-xl-4 col-md-6 reveal delay-1">
+                            <div class="facility-card" data-hover>
+                                <div class="f-icon"><i class="fa-solid fa-building-user"></i></div>
+                                <h4 class="mb-3">Boarding & Lab IT</h4>
+                                <p class="text-muted small">Fasilitas asrama yang nyaman dilengkapi laboratorium komputer berstandar industri 24 jam untuk *coding*.</p>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="col-xl-4 col-md-6 reveal delay-2">
+                            <div class="facility-card" data-hover>
+                                <div class="f-icon" style="background: rgba(255,209,0,0.15); color: #d97706;"><i class="fa-solid fa-wallet"></i></div>
+                                <h4 class="mb-3">Uang Saku Bulanan</h4>
+                                <p class="text-muted small">Santri menerima uang saku (Mukafa'ah) setiap bulan untuk menunjang kebutuhan operasional harian.</p>
+                            </div>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="col-xl-4 col-md-6 reveal">
+                            <div class="facility-card" data-hover>
+                                <div class="f-icon islamic"><i class="fa-solid fa-book-quran"></i></div>
+                                <h4 class="mb-3">Tahfidz & Diniyah</h4>
+                                <p class="text-muted small">Pembinaan karakter islami berhaluan Ahlus Sunnah wal Jamaah dan program hafalan Al-Quran terstruktur.</p>
+                            </div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="col-xl-4 col-md-6 reveal delay-1">
+                            <div class="facility-card" data-hover>
+                                <div class="f-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                                <h4 class="mb-3">Fokus Software & Digital</h4>
+                                <p class="text-muted small">Mempelajari fundamental hingga *advanced* web *development* (Python, Flask, JS) & *Digital Marketing*.</p>
+                            </div>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="col-xl-4 col-md-6 reveal delay-2">
+                            <div class="facility-card" data-hover>
+                                <div class="f-icon" style="background: rgba(16,185,129,0.1); color: #059669;"><i class="fa-solid fa-handshake"></i></div>
+                                <h4 class="mb-3">Penyaluran Kerja</h4>
+                                <p class="text-muted small">Setelah lulus 1 tahun, santri akan disalurkan ke DUDI (Dunia Usaha Dunia Industri) berbekal portofolio nyata.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. ALUR PENDAFTARAN -->
+            <section id="alur" class="timeline-section">
+                <div class="container px-4 px-lg-5">
+                    <div class="section-title reveal">
+                        <span class="section-subtitle">Roadmap Pendaftaran</span>
+                        <h2 class="display-5 fw-bold mb-3">Alur Seleksi Santri 2027</h2>
+                        <p class="text-muted mx-auto" style="max-width: 600px;">Proses seleksi transparan dan profesional untuk menjaring talenta terbaik di seluruh Indonesia.</p>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-date">Januari - Februari</span>
+                                <h4>Pendaftaran Online</h4>
+                                <p class="text-muted small mb-0">Pengisian formulir pendaftaran melalui sistem web PeTIK dan melengkapi berkas administrasi kelayakan (SKTM).</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal delay-1">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-date">Maret</span>
+                                <h4>Tes Tertulis & Potensi Akademik</h4>
+                                <p class="text-muted small mb-0">Ujian TPA, Matematika Dasar, Logika, dan Pendidikan Agama Islam secara daring.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal delay-2">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-date">April</span>
+                                <h4>Survey & Wawancara</h4>
+                                <p class="text-muted small mb-0">Tim YBM PLN akan melakukan survey lapangan ke domisili calon santri dan wawancara komitmen.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal delay-1">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-date">Juli</span>
+                                <h4>Mulai Pendidikan (Bootcamp)</h4>
+                                <p class="text-muted small mb-0">Kedatangan santri di Jombang (tiket ditanggung penuh) dan dimulainya orientasi pesantren IT.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. FOOTER ISLAMIC & PLN -->
+            <footer id="kontak" class="pt-5" style="background: var(--bg-surface); border-top: 4px solid var(--primary);">
+                <div class="container px-4 px-lg-5 pt-4">
+                    <div class="row g-5 mb-5">
+                        <div class="col-lg-5 reveal">
+                            <a href="#" class="brand-logo mb-4 d-inline-flex">
+                                <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+                                <div class="brand-text">
+                                    <h3 class="mb-0 text-primary fw-bold">PeTIK II Jombang</h3>
+                                    <span>Lembaga Pendidikan YBM PLN</span>
+                                </div>
+                            </a>
+                            <p class="text-muted mb-4 pe-lg-4">
+                                Memadukan kemajuan teknologi informasi dengan nilai-nilai luhur kepesantrenan. Mewujudkan generasi digital yang mumpuni secara *hard-skill* dan teguh secara spiritual.
+                            </p>
+                            <div class="d-flex gap-3">
+                                <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" data-hover><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" data-hover><i class="fa-brands fa-youtube"></i></a>
+                                <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" data-hover><i class="fa-brands fa-github"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-3 offset-lg-1 reveal delay-1">
+                            <h5 class="fw-bold mb-4">Navigasi Cepat</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><a href="#beranda" class="text-decoration-none text-muted" data-hover><i class="fa-solid fa-chevron-right me-2 text-primary" style="font-size: 0.8rem;"></i> Beranda</a></li>
+                                <li class="mb-3"><a href="#fasilitas" class="text-decoration-none text-muted" data-hover><i class="fa-solid fa-chevron-right me-2 text-primary" style="font-size: 0.8rem;"></i> Fasilitas Beasiswa</a></li>
+                                <li class="mb-3"><a href="#program" class="text-decoration-none text-muted" data-hover><i class="fa-solid fa-chevron-right me-2 text-primary" style="font-size: 0.8rem;"></i> Kurikulum (PPL & DM)</a></li>
+                                <li class="mb-3"><a href="#" class="text-decoration-none text-muted" data-hover><i class="fa-solid fa-chevron-right me-2 text-primary" style="font-size: 0.8rem;"></i> Portal Pendaftaran</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 reveal delay-2">
+                            <h5 class="fw-bold mb-4">Pusat Informasi</h5>
+                            <div class="d-flex align-items-start text-muted mb-3">
+                                <i class="fa-solid fa-location-dot mt-1 me-3 text-primary"></i>
+                                <p class="mb-0 small">
+                                    Jl. KH. Bisri Syansuri, RT.001/RW.005,<br>
+                                    Plosogeneng, Kec. Jombang,<br>
+                                    Kabupaten Jombang, Jawa Timur 61416
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center text-muted mb-3">
+                                <i class="fa-solid fa-envelope me-3 text-primary"></i>
+                                <p class="mb-0 small">admin@petikjombang.com</p>
+                            </div>
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="fa-brands fa-whatsapp me-3 text-success fs-5"></i>
+                                <p class="mb-0 small">0895-XXXX-XXXX (Admin)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center text-muted py-4 border-top border-light-subtle small d-flex flex-column flex-md-row justify-content-between align-items-center">
+                        <p class="mb-2 mb-md-0">&copy; 2026 PeTIK II Jombang - YBM PLN. All rights reserved.</p>
+                        <p class="mb-0">Didevelop dengan <i class="fa-solid fa-heart text-danger mx-1"></i> oleh Tim Santri PPL Gen-5.</p>
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- CHIBI MASCOT WIDGET -->
+    <div id="mascot-container" class="mascot-container">
+        <div class="mascot-bubble" id="mascot-bubble">
+            Ahlan wa sahlan! Ada yang bisa ana bantu terkait info pendaftaran? 🌟
+        </div>
+        <!-- Menggunakan karakter ilustrasi 3D ramah / Islamic illustration fallback -->
+        <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=Juhdan&backgroundColor=transparent" 
+             alt="Maskot Santri PeTIK" 
+             class="mascot-img bg-white rounded-circle shadow p-2" 
+             id="mascot-img"
+             title="Sapa Ana!">
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. SPLASH SCREEN (PLN ENERGY LOAD)
+            const splashScreen = document.getElementById('splash-screen');
+            setTimeout(() => {
+                splashScreen.classList.add('hidden');
+                setTimeout(() => splashScreen.style.display = 'none', 1000);
+            }, 2500);
+
+            // 2. CUSTOM CURSOR LOGIC (Spark Glow)
+            const dot = document.getElementById('cursor-dot');
+            const outline = document.getElementById('cursor-outline');
+            const hoverables = document.querySelectorAll('[data-hover], a, button');
+            
+            if (window.matchMedia("(pointer: fine)").matches) {
+                let mouseX = 0, mouseY = 0;
+                let outlineX = 0, outlineY = 0;
+
+                window.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX; mouseY = e.clientY;
+                    dot.style.left = `${mouseX}px`; dot.style.top = `${mouseY}px`;
+                });
+
+                const animateOutline = () => {
+                    let distX = mouseX - outlineX; let distY = mouseY - outlineY;
+                    outlineX += distX * 0.15; outlineY += distY * 0.15;
+                    outline.style.left = `${outlineX}px`; outline.style.top = `${outlineY}px`;
+                    requestAnimationFrame(animateOutline);
+                };
+                animateOutline();
+
+                hoverables.forEach(el => {
+                    el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
+                    el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
+                });
+            }
+
+            // 3. THEME TOGGLER (Light/Dark)
+            const themeToggle = document.getElementById('themeToggle');
+            const htmlEl = document.documentElement;
+            const themeIcon = themeToggle.querySelector('i');
+
+            const currentTheme = localStorage.getItem('petik-theme') || 'light';
+            htmlEl.setAttribute('data-bs-theme', currentTheme);
+            themeIcon.className = currentTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = htmlEl.getAttribute('data-bs-theme') === 'dark';
+                const newTheme = isDark ? 'light' : 'dark';
+                htmlEl.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('petik-theme', newTheme);
+                themeIcon.className = newTheme === 'dark' ? 'fa-solid fa-sun text-warning' : 'fa-solid fa-moon';
+            });
+
+            // 4. SIDEBAR MOBILE TOGGLE
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 992 && !sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
+                }
+            });
+
+            // 5. SCROLL REVEAL ANIMATION & ACTIVE LINK NAV
+            const reveals = document.querySelectorAll('.reveal');
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section');
+
+            const revealOptions = { root: null, threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+            reveals.forEach(el => revealObserver.observe(el));
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href').includes(current)) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+
+            // 6. INTERACTIVE CHIBI MASCOT (Contextual Messages)
+            const mascotImg = document.getElementById('mascot-img');
+            const mascotBubble = document.getElementById('mascot-bubble');
+            
+            const messages = [
+                "Bismillah, jangan lupa niatkan belajar untuk ibadah ya! 💻",
+                "Sudah cek fasilitas beasiswa YBM PLN di bawah?",
+                "PPL Gen-5 mantap! Terus asah *skill* codingmu 🚀",
+                "Ingin tahu cara mendaftar? Cek bagian Alur Pendaftaran!",
+                "Semangat belajar Python dan JS-nya! ✨"
+            ];
+
+            let bubbleTimer;
+            const showMessage = (msg) => {
+                clearTimeout(bubbleTimer);
+                mascotBubble.textContent = msg || messages[Math.floor(Math.random() * messages.length)];
+                mascotBubble.classList.add('show');
+                bubbleTimer = setTimeout(() => mascotBubble.classList.remove('show'), 6000);
+            };
+
+            mascotImg.addEventListener('click', () => showMessage());
+            
+            // Auto greeting setelah splash screen selesai
+            setTimeout(() => showMessage("Assalamu'alaikum! Selamat datang di Portal PeTIK II Jombang."), 3500);
+        });
+    </script>
+</body>
+</html>
