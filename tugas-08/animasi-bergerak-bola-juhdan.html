@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Web Design</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+       body {
+            margin: 0;  
+            background-color: white;
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+}
+        /* AREA LINGKARAN */
+        .container {
+            width: 100%;
+            height: 260px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+
+        /* LINGKARAN */
+        .ball {
+            width: 250px;
+            height: 250px;
+            flex-shrink: 0;
+            border-radius: 50%;
+
+            animation:
+                rolling 5s linear infinite alternate,
+                changeColor 8s linear infinite;
+        }
+
+        /* GERAKAN LINGKARAN */
+        @keyframes rolling {
+            from {
+                transform: translateX(0) rotate(0deg);
+            }
+
+            to {
+                transform: translateX(calc(100vw - 250px)) rotate(720deg);
+            }
+        }
+
+        /* PERUBAHAN WARNA */
+        @keyframes changeColor {
+            0% {
+                background-color: red;
+            }
+
+            25% {
+                background-color: yellow;
+            }
+
+            50% {
+                background-color: green;
+            }
+
+            75% {
+                background-color: blue;
+            }
+
+            100% {
+                background-color: purple;
+            }
+        }
+
+        /* BANNER TEKS */
+        .banner {
+            width: calc(100% - 16px);
+            margin: 0 8px;
+            padding: 20px 0;
+            background-color: aquamarine;
+        }
+
+        /* TEKS BERJALAN */
+        marquee {
+            color: red;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- LINGKARAN -->
+    <div class="container">
+        <div class="ball"></div>
+    </div>
+
+    <!-- BANNER TEKS -->
+    <div class="banner">
+        <marquee direction="left" scrollamount="8">
+            Assalamualaikum, nama saya Muhammad Juhdan Alhakim
+        </marquee>
+    </div>
+
+</body>
+</html>
