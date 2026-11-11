@@ -1,38 +1,71 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Biodata Sederhana</title>
 </head>
 <body>
 
-    <h4>1.Membuat Biodata Sederhana</h4>
-    <br>
+    <h4>1. Membuat Biodata Sederhana</h4>
     <h4>2. Mengubah Nilai Variabel</h4>
+
     <script>
         // Membuat variabel biodata
-let nama = "Muhammad Juhdan"; // Tipe data String (teks)
-let umur = 18;                // Tipe data Number (angka)
-let isSiswa = true;            // Tipe data Boolean (true/false)
+        let nama = "Muhammad Juhdan Alhakim";
+        let namapanggilan = "juhdan";
+        let ttl = "Bandung 12 Januari 2008";
 
-// Menampilkan biodata ke layar
-console.log("=== BIODATA SAYA ===");
-console.log("Nama        :", nama);
-console.log("Umur        :", umur);
-console.log("Status Siswa:", isSiswa);
+        // Menggunakan tipe data angka/number karena berupa angka/nomor
+        let umur = 18;
+        // selesai tipe data angka
 
-// Membuat variabel nilai ujian
-let nilaiUjian = 70;
+        let agama = "Islam";
+        let isSiswa = true;
 
-// Menampilkan nilai awal
-console.log("Nilai awal:", nilaiUjian);
+        // Menggunakan tipe data boolean karena terdapat logika antara true dan false
+        let jeniskelamin = true;
+        let status = false;
 
-// Mengubah nilai variabel tanpa menggunakan let lagi
-nilaiUjian = 85;
+        // Menggunakan tipe data string karena ada tanda petik seperti '' atau ""
+        let kewarganeraan = "Indonesia";
+        let hobi = "Suka mencari hal baru, olahraga, belajar, jalan-jalan";
+        let notlp = "08951234567";
+        let email = "muhammdjuhdan1234@gmail.com"
 
-// Menampilkan nilai setelah diubah
-console.log("Nilai baru:", nilaiUjian);
+        // Menampilkan biodata ke Console
+        console.log("=== BIODATA SAYA ===");
+        console.log("Nama           :", nama);
+        console.log("Nama Panggilan :", namapanggilan);
+        console.log("TTL            :", ttl);
+        console.log("Umur           :", umur + " tahun, otw umur 19 nanti Januari");
+        console.log("Agama          :", agama);
+        console.log("Status Siswa   :", isSiswa);
+
+        // Mengubah Boolean menjadi teks menggunakan ternary operator
+        console.log("Jenis Kelamin  :", jeniskelamin ? "Laki-laki" : "Perempuan");
+        console.log("Status         :", status ? "Sudah Menikah" : "Belum Menikah");
+
+        console.log("Kewarganegaraan:", kewarganeraan);
+        console.log("Hobi           :", hobi);
+        console.log("No Telepon     :", notlp);
+        console.log("Gmail          :", email)
+
+        // Membuat variabel nilai ujian
+        let nilaiUjian = 87;
+
+        // Menampilkan nilai awal
+        console.log("=== NILAI UJIAN JUHDAN===");
+        console.log("Nilai awal:", nilaiUjian);
+
+        // Mengubah nilai variabel
+        nilaiUjian = 96;
+
+        // Menampilkan nilai baru
+        console.log("Nilai baru:", nilaiUjian);
+
     </script>
+
 </body>
 </html>
